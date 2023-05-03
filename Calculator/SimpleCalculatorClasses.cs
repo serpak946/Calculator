@@ -90,19 +90,19 @@ namespace Calculator
         public double Pow() => Math.Pow(x, y);
         public string BIN()
         {
-            return "";
+            return "bin";
         }
         public string OCT()
         {
-            return "";
+            return "oct";
         }
         public string DEC()
         {
-            return "";
+            return "dec";
         }
         public string HEX()
         {
-            return "";
+            return "hex";
         }
     }
 }

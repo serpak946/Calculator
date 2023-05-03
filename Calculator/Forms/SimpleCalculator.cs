@@ -49,7 +49,7 @@ namespace Calculator.Forms
             {
                 if (numOfOp(textBox1.Text) == 2)
                 {
-                    SimpleCalc calc = new SimpleCalc(textBox1.Text.Substring(0, textBox1.Text.Length - 2));
+                    SimpleCalc calc = new SimpleCalc(textBox1.Text.Substring(0, textBox1.Text.Length - 1));
                     textBox1.Text = calc.operation().ToString();
                     (ParentForm.Controls["panelHistory"].Controls["listBox1"] as ListBox).Items.Insert(0, new History(calc));
                 }

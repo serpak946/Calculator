@@ -117,7 +117,11 @@ namespace Calculator
         private void Калькулятор_KeyPress(object sender, KeyPressEventArgs e)
         {
             char ch = e.KeyChar;
-            if (!Char.IsDigit(ch) && ch != ',' && ch != '+' && ch != '-' && ch != '*' && ch != '/' && ch != '%' && ch != (char)Keys.Enter && ch != '^' && ch != '.')
+            /*if (!Char.IsDigit(ch) && ch != ',' && ch != '+' && ch != '-' && ch != '*' && ch != '/' && ch != '%' && ch != (char)Keys.Enter && ch != '^' && ch != '.')
+            {
+                e.Handled = true;
+            }*/
+            if (!Constants.keysChar.Contains(e.KeyChar))
             {
                 e.Handled = true;
             }

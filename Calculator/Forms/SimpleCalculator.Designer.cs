@@ -485,7 +485,6 @@
             this.button24.Name = "button24";
             this.button24.Size = new System.Drawing.Size(192, 53);
             this.button24.TabIndex = 23;
-            this.button24.Text = "±";
             this.button24.UseVisualStyleBackColor = true;
             // 
             // radioButton1

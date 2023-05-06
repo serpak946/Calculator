@@ -1,49 +1,59 @@
-﻿using Calculator;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Calculator
 {
     public static class Constants
     {
-        public static List<char> keysChar { get; } = new List<char>() { '+', '-', '*', '/', '%', '^', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        public static List<char> keysChar { get; } = new List<char>() { '+', '-', '*', '/', '%', '^', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', (char)Keys.Back, '.', ',', '×', '÷' };
         public static List<Keys> keys { get; } = new List<Keys>() { Keys.Enter, Keys.Back, Keys.D0, Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D6, Keys.D7, Keys.D8, Keys.D9, Keys.Add, Keys.Multiply, Keys.Divide, Keys.Oemcomma, Keys.OemPeriod, Keys.Subtract, (Keys)Enum.Parse(typeof(Keys), "Oem5") };
-        public static List<char> allOperations { get; } = new List<char>() { '+', '-', '*', '/', '%', '^' };
-        public static List<char> doubleOperations { get; } = new List<char>() { '+', '-', '*', '/', '^' };
+        public static List<char> allOperations { get; } = new List<char>() { '+', '-', '*', '/', '%', '^', '÷', '×' };
+        public static List<char> decimalOperations { get; } = new List<char>() { '+', '-', '*', '/', '^', '÷', '×' };
         public static List<char> oneOperations { get; } = new List<char>() { '%' };
     }
 
     interface IHistory
     {
         string problem { get; set; }
-        double answer { get; set; }
+        decimal answer { get; set; }
     }
     public class History : IHistory
     {
         public string problem { get; set; }
-        public double answer { get; set; }
-        public History(string problem, double answer)
+        public decimal answer { get; set; }
+        public History(string problem, decimal answer, ListBox list)
         {
             this.problem = problem;
             this.answer = answer;
+            if (!list.Items.Contains(this))
+            {
+                list.Items.Insert(0, this);
+            }
         }
-        public History(SimpleCalc simpleCalc)
+        public History(SimpleCalc simpleCalc, ListBox list)
         {
             this.problem = simpleCalc.problem;
             this.answer = simpleCalc.operation();
+            if (!list.Items.Contains(this))
+            {
+                list.Items.Insert(0, this);
+            }
         }
         public override string ToString()
         {
-            if (problem.Length >= 20)
-            {
-                problem = problem.Substring(0, 17);
-                problem += "...";
-            }
-            return problem + ':' + answer.ToString();
+            return (problem.Length >= 29 ? problem.Substring(0, 26) + "..." : problem) + ':' + (answer.ToString().Length >= 29 ? answer.ToString().Substring(0, 26) + "..." : answer.ToString());
+        }
+        public override bool Equals(object obj)
+        {
+            if (obj is History other)
+                return problem.Equals(other.problem);
+            else
+                return false;
+        }
+        public override int GetHashCode()
+        {
+            return this.problem.GetHashCode();
         }
     }
 }

@@ -9,16 +9,14 @@ namespace Calculator
 {
     interface ISimpleCalc
     {
-        double x { get; set; }
-        double y { get; set; }
+        decimal x { get; set; }
+        decimal y { get; set; }
         string problem { get; set; }
-        double Sum();
-        double Subtraction();
-        double Multiplication();
-        double Division();
-        double Sqrt();
-        double Square();
-        double Pow();
+        decimal Sum();
+        decimal Subtraction();
+        decimal Multiplication();
+        decimal Division();
+        decimal Pow();
         string BIN();
         string OCT();
         string DEC();
@@ -26,10 +24,10 @@ namespace Calculator
     }
     public class SimpleCalc : ISimpleCalc
     {
-        public delegate double Operation();
+        public delegate decimal Operation();
         public Operation operation;
-        public double x { get; set; }
-        public double y { get; set; }
+        public decimal x { get; set; }
+        public decimal y { get; set; }
         public string problem { get; set; }
         private char Operationstring;
         public char operationstring
@@ -46,10 +44,12 @@ namespace Calculator
                         operation = Sum; break;
                     case '-':
                         operation = Subtraction; break;
-                    case '*':
+                    case '×':
                         operation = Multiplication; break;
-                    case '/':
+                    case '÷':
                         operation = Division; break;
+                    case '^':
+                        operation = Pow; break;
                 }
                 Operationstring = value;
             }
@@ -59,35 +59,33 @@ namespace Calculator
             this.problem = s;
             operationstring = s.Last(a => Constants.allOperations.Contains(a));
             int n = s.LastIndexOf(operationstring);
-            x = Convert.ToDouble(s.Substring(0, n));
-            y = Convert.ToDouble(s.Substring(n+1));
+            x = Convert.ToDecimal(s.Substring(0, n));
+            y = Convert.ToDecimal(s.Substring(n+1));
         }
-        public SimpleCalc(double x)
+        public SimpleCalc(decimal x)
         {
             this.x = x;
         }
-        public SimpleCalc(double x, double y)
+        public SimpleCalc(decimal x, decimal y)
         {
             this.x = x;
             this.y = y;
         }
-        public double Sum() => x+y;
-        public double Subtraction() => x-y;
-        public double Multiplication() => x*y;
-        public double Division()
+        public decimal Sum() => Convert.ToDecimal((x + y).ToString("G0"));
+        public decimal Subtraction() => Convert.ToDecimal((x - y).ToString("G0"));
+        public decimal Multiplication() => Convert.ToDecimal((x * y).ToString("G0"));
+        public decimal Division()
         {
             if (y != 0)
             {
-                return x/y;
+                return Convert.ToDecimal((x / y).ToString("0.############################"));   
             }
             else
             {
                 throw new DivideByZeroException();
             }
         }
-        public double Sqrt() => Math.Sqrt(x);
-        public double Square() => x*x;
-        public double Pow() => Math.Pow(x, y);
+        public decimal Pow() => (decimal)Math.Pow((double)x, (double)y);
         public string BIN()
         {
             return "bin";

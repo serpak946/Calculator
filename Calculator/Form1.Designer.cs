@@ -62,7 +62,7 @@
             this.menuPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.menuPanel.Location = new System.Drawing.Point(5, 45);
             this.menuPanel.Name = "menuPanel";
-            this.menuPanel.Size = new System.Drawing.Size(45, 618);
+            this.menuPanel.Size = new System.Drawing.Size(45, 650);
             this.menuPanel.TabIndex = 2;
             // 
             // trigCalculatorButton
@@ -166,7 +166,7 @@
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(50, 45);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(447, 618);
+            this.panelMain.Size = new System.Drawing.Size(765, 650);
             this.panelMain.TabIndex = 0;
             // 
             // panelControl
@@ -180,7 +180,7 @@
             this.panelControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelControl.Location = new System.Drawing.Point(5, 5);
             this.panelControl.Name = "panelControl";
-            this.panelControl.Size = new System.Drawing.Size(672, 40);
+            this.panelControl.Size = new System.Drawing.Size(1090, 40);
             this.panelControl.TabIndex = 2;
             this.panelControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelControl_MouseDown);
             // 
@@ -191,7 +191,7 @@
             this.buttonMinimie.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonMinimie.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonMinimie.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(205)))), ((int)(((byte)(196)))));
-            this.buttonMinimie.Location = new System.Drawing.Point(550, 0);
+            this.buttonMinimie.Location = new System.Drawing.Point(968, 0);
             this.buttonMinimie.Name = "buttonMinimie";
             this.buttonMinimie.Size = new System.Drawing.Size(40, 38);
             this.buttonMinimie.TabIndex = 9;
@@ -207,7 +207,7 @@
             this.buttonMaximize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonMaximize.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonMaximize.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(230)))), ((int)(((byte)(109)))));
-            this.buttonMaximize.Location = new System.Drawing.Point(590, 0);
+            this.buttonMaximize.Location = new System.Drawing.Point(1008, 0);
             this.buttonMaximize.Name = "buttonMaximize";
             this.buttonMaximize.Size = new System.Drawing.Size(40, 38);
             this.buttonMaximize.TabIndex = 10;
@@ -225,7 +225,7 @@
             this.buttonClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(107)))), ((int)(((byte)(107)))));
-            this.buttonClose.Location = new System.Drawing.Point(630, 0);
+            this.buttonClose.Location = new System.Drawing.Point(1048, 0);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(40, 38);
             this.buttonClose.TabIndex = 11;
@@ -239,9 +239,9 @@
             this.panelHistory.Controls.Add(this.listBox1);
             this.panelHistory.Controls.Add(this.label1);
             this.panelHistory.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panelHistory.Location = new System.Drawing.Point(497, 45);
+            this.panelHistory.Location = new System.Drawing.Point(815, 45);
             this.panelHistory.Name = "panelHistory";
-            this.panelHistory.Size = new System.Drawing.Size(180, 618);
+            this.panelHistory.Size = new System.Drawing.Size(280, 650);
             this.panelHistory.TabIndex = 3;
             // 
             // listBox1
@@ -257,7 +257,7 @@
             this.listBox1.Location = new System.Drawing.Point(0, 52);
             this.listBox1.Name = "listBox1";
             this.listBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.listBox1.Size = new System.Drawing.Size(180, 566);
+            this.listBox1.Size = new System.Drawing.Size(280, 598);
             this.listBox1.TabIndex = 1;
             this.listBox1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBox1_DrawItem);
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
@@ -270,7 +270,7 @@
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(230)))), ((int)(((byte)(109)))));
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(180, 52);
+            this.label1.Size = new System.Drawing.Size(280, 52);
             this.label1.TabIndex = 0;
             this.label1.Text = "История";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -281,7 +281,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
             this.CancelButton = this.buttonClose;
-            this.ClientSize = new System.Drawing.Size(682, 668);
+            this.ClientSize = new System.Drawing.Size(1100, 700);
             this.ControlBox = false;
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelHistory);
@@ -291,7 +291,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(540, 535);
+            this.MinimumSize = new System.Drawing.Size(640, 535);
             this.Name = "Калькулятор";
             this.Opacity = 0.95D;
             this.Padding = new System.Windows.Forms.Padding(5);

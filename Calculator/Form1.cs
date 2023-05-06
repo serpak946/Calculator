@@ -15,6 +15,7 @@ namespace Calculator
     public partial class Калькулятор : Form
     {
         TextBox textBox;
+        Form Calc;
         public Калькулятор()
         {
             InitializeComponent();
@@ -30,6 +31,7 @@ namespace Calculator
 
         private void openForm(object sender, Form childForm)
         {
+            Calc = childForm;
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
             childForm.Dock = DockStyle.Fill;
@@ -37,11 +39,19 @@ namespace Calculator
             panelMain.Tag = childForm;
             childForm.BringToFront();
             childForm.Show();
+            childForm.Select();
+/*            decimal a = 8M;
+            decimal b = 3M;
+            decimal c = Convert.ToDecimal((a / b).ToString());
+            double a1 = 8.0;
+            double b1 = 3.0;
+            double c1 = a1 / b1;
+            MessageBox.Show((a / b).ToString() + "\n" +  (c * b).ToString() + "\n" + (c1*b1).ToString());*/
         }
         
         public void newHistory(SimpleCalc calc)
         {
-            listBox1.Items.Add(new History(calc));
+            new History(calc, listBox1);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -116,33 +126,39 @@ namespace Calculator
         }
         private void Калькулятор_KeyPress(object sender, KeyPressEventArgs e)
         {
-            char ch = e.KeyChar;
-            /*if (!Char.IsDigit(ch) && ch != ',' && ch != '+' && ch != '-' && ch != '*' && ch != '/' && ch != '%' && ch != (char)Keys.Enter && ch != '^' && ch != '.')
-            {
-                e.Handled = true;
-            }*/
+/*            char ch = e.KeyChar;
             if (!Constants.keysChar.Contains(e.KeyChar))
             {
                 e.Handled = true;
             }
             else
             {
-                SystemSounds.Beep.Play();
-                textBox.Text += e.KeyChar.ToString();
-            }
+                if (e.KeyChar == (char)Keys.Enter)
+                {
+                    textBox.Text += "+";
+                    textBox.Text = textBox.Text.Substring(0, textBox.TextLength-2);
+                }
+                else
+                {
+                    textBox.Text += e.KeyChar.ToString();
+                }
+            }*/
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex != -1)
             {
-                if (Constants.doubleOperations.Contains(textBox.Text[textBox.Text.Length - 1]))
+                if (textBox.Text != string.Empty && Constants.decimalOperations.Contains(textBox.Text[textBox.Text.Length - 1]))
                     textBox.Text += (listBox1.SelectedItem as History).answer;
                 else
                     textBox.Text = (listBox1.SelectedItem as History).answer.ToString();
                 listBox1.ClearSelected();
             }
+            Calc.Select();
         }
+
+
 
 
 

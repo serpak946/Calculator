@@ -13,7 +13,7 @@ namespace Calculator
         {
             if (open)
             {
-                form.MinimumSize = new Size(640, 535);
+                form.MinimumSize = new Size(720, 535);
                 foreach (Button button in panel.Controls)
                 {
                     button.Visible = !open;
@@ -23,7 +23,7 @@ namespace Calculator
             }
             else
             {
-                form.MinimumSize = new Size(700, 535);
+                form.MinimumSize = new Size(780, 535);
                 Anim(panel, form);
                 foreach (Button button in panel.Controls)
                 {

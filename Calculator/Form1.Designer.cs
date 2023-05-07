@@ -291,7 +291,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(640, 535);
+            this.MinimumSize = new System.Drawing.Size(720, 535);
             this.Name = "Калькулятор";
             this.Opacity = 0.95D;
             this.Padding = new System.Windows.Forms.Padding(5);

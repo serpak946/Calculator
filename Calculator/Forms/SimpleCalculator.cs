@@ -3,12 +3,16 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Calculator.Forms
 {
     public partial class SimpleCalculator : Form
     {
         ListBox list;
+        List<char> keysChar;
+        List<Button> buttons;
+        numSystem system = numSystem.dec;
         public SimpleCalculator()
         {
             InitializeComponent();
@@ -31,6 +35,8 @@ namespace Calculator.Forms
             textBox1.Font = new Font(MyFont.LoadFont(Resources.Digital7Italic_BW658), textBox1.Font.Size);
             textBox1.ForeColor = ColorTranslator.FromHtml("#F7FFF7");
             list = ParentForm.Controls["panelHistory"].Controls["listBox1"] as ListBox;
+            keysChar = Constants.decChar;
+            buttons = new List<Button>() { button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, buttonA, buttonB, buttonC, buttonD, buttonE, buttonF };
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -41,7 +47,7 @@ namespace Calculator.Forms
                 if (numOfOp(textBox1.Text) == 2)
                 {
                     char t = textBox1.Text[textBox1.TextLength - 1];
-                    SimpleCalc calc = new SimpleCalc(textBox1.Text.Substring(0, textBox1.Text.Length - 1));
+                    DecSimpleCalc calc = new DecSimpleCalc(textBox1.Text.Substring(0, textBox1.Text.Length - 1));
                     textBox1.Text = calc.operation().ToString() + t;
                     new History(calc, list);
                 }
@@ -54,13 +60,13 @@ namespace Calculator.Forms
             {
                 if (numOfOp(textBox1.Text) != 0)
                 {
-                    SimpleCalc calc = new SimpleCalc(textBox1.Text);
+                    DecSimpleCalc calc = new DecSimpleCalc(textBox1.Text);
                     textBox1.Text = calc.operation().ToString();
                     History hist = new History(calc, list);
                 }
                 else
                 {
-                    SimpleCalc temp = new SimpleCalc((list.Items[0] as IHistory).problem);
+                    DecSimpleCalc temp = new DecSimpleCalc((list.Items[0] as IHistory).problem);
                     textBox1.Text += (temp.operationstring.ToString() + temp.y);
                     buttonEqual_Click(sender, e);
                 }
@@ -82,7 +88,7 @@ namespace Calculator.Forms
         private void SimpleCalculator_KeyPress(object sender, KeyPressEventArgs e)
         {
             char ch = e.KeyChar;
-            if (!Constants.keysChar.Contains(e.KeyChar))
+            if (!keysChar.Contains(e.KeyChar))
             {
                 e.Handled = true;
             }
@@ -148,13 +154,13 @@ namespace Calculator.Forms
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
                 textBox1.Text += Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################");
-                new History("√"+s, (decimal)Math.Sqrt(Convert.ToDouble(s)), list);
+                new History("√"+s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
             }
             catch (InvalidOperationException)
             {
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
                 textBox1.Text = Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################");
-                new History("√" + s, (decimal)Math.Sqrt(Convert.ToDouble(s)), list);
+                new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
             }
         }
 
@@ -167,14 +173,14 @@ namespace Calculator.Forms
                 n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => Constants.allOperations.Contains(a)));
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
-                textBox1.Text += (new SimpleCalc("1÷" + s)).operation().ToString("0.############################");
-                new History(new SimpleCalc("1÷" + s), list);
+                textBox1.Text += (new DecSimpleCalc("1÷" + s)).operation();
+                new History(new DecSimpleCalc("1÷" + s), list);
             }
             catch (InvalidOperationException)
             {
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
-                textBox1.Text = (new SimpleCalc("1÷" + s)).operation().ToString("0.############################");
-                new History(new SimpleCalc("1÷" + s), list);
+                textBox1.Text = (new DecSimpleCalc("1÷" + s)).operation();
+                new History(new DecSimpleCalc("1÷" + s), list);
             }
         }
 
@@ -192,14 +198,69 @@ namespace Calculator.Forms
                 n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => Constants.allOperations.Contains(a)));
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
-                textBox1.Text += (new SimpleCalc(s+"^2")).operation().ToString("0.############################");
-                new History(new SimpleCalc(s + "^2"), list);
+                textBox1.Text += (new DecSimpleCalc(s + "^2")).operation();
+                new History(new DecSimpleCalc(s + "^2"), list);
             }
             catch (InvalidOperationException)
             {
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
-                textBox1.Text = (new SimpleCalc(s + "^2")).operation().ToString("0.############################");
-                new History(new SimpleCalc(s + "^2"), list);
+                textBox1.Text = (new DecSimpleCalc(s + "^2")).operation();
+                new History(new DecSimpleCalc(s + "^2"), list);
+            }
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked)
+            {
+                keysChar = Constants.binChar;
+                buttons.ForEach(button => button.Enabled = false);
+                button10.Enabled = true;
+                button1.Enabled = true;
+                system = numSystem.bin;
+            }
+            else
+            {
+                if (radioButton2.Checked)
+                {
+                    keysChar = Constants.octChar;
+                    buttons.ForEach(button => button.Enabled = false);
+                    button10.Enabled = true;
+                    button1.Enabled = true;
+                    button2.Enabled = true;
+                    button3.Enabled = true;
+                    button4.Enabled = true;
+                    button5.Enabled = true;
+                    button6.Enabled = true;
+                    button7.Enabled = true;
+                    system = numSystem.oct;
+                }
+                else
+                {
+                    if (radioButton3.Checked)
+                    {
+                        keysChar = Constants.decChar;
+                        keysChar = Constants.octChar;
+                        buttons.ForEach(button => button.Enabled = false);
+                        button10.Enabled = true;
+                        button1.Enabled = true;
+                        button2.Enabled = true;
+                        button3.Enabled = true;
+                        button4.Enabled = true;
+                        button5.Enabled = true;
+                        button6.Enabled = true;
+                        button7.Enabled = true;
+                        button8.Enabled = true;
+                        button9.Enabled = true;
+                        system = numSystem.dec;
+                    }
+                    else
+                    {
+                        keysChar = Constants.hexChar;
+                        buttons.ForEach(button => button.Enabled = true);
+                        system = numSystem.hex;
+                    }
+                }
             }
         }
     }

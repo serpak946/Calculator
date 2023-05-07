@@ -40,16 +40,9 @@ namespace Calculator
             childForm.BringToFront();
             childForm.Show();
             childForm.Select();
-/*            decimal a = 8M;
-            decimal b = 3M;
-            decimal c = Convert.ToDecimal((a / b).ToString());
-            double a1 = 8.0;
-            double b1 = 3.0;
-            double c1 = a1 / b1;
-            MessageBox.Show((a / b).ToString() + "\n" +  (c * b).ToString() + "\n" + (c1*b1).ToString());*/
         }
         
-        public void newHistory(SimpleCalc calc)
+        public void newHistory(DecSimpleCalc calc)
         {
             new History(calc, listBox1);
         }
@@ -126,23 +119,7 @@ namespace Calculator
         }
         private void Калькулятор_KeyPress(object sender, KeyPressEventArgs e)
         {
-/*            char ch = e.KeyChar;
-            if (!Constants.keysChar.Contains(e.KeyChar))
-            {
-                e.Handled = true;
-            }
-            else
-            {
-                if (e.KeyChar == (char)Keys.Enter)
-                {
-                    textBox.Text += "+";
-                    textBox.Text = textBox.Text.Substring(0, textBox.TextLength-2);
-                }
-                else
-                {
-                    textBox.Text += e.KeyChar.ToString();
-                }
-            }*/
+
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)

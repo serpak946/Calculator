@@ -240,7 +240,6 @@ namespace Calculator.Forms
                     if (radioButton3.Checked)
                     {
                         keysChar = Constants.decChar;
-                        keysChar = Constants.octChar;
                         buttons.ForEach(button => button.Enabled = false);
                         button10.Enabled = true;
                         button1.Enabled = true;

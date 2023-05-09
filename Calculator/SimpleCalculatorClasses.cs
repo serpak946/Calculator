@@ -19,7 +19,7 @@ namespace Calculator
     {
         public static decimal toDec(string s, numSystem system)
         {
-            return Convert.ToInt32(s, ((int)system));
+            return Convert.ToInt32(s.Split(',')[0], ((int)system));
         }
         public static string fromDec(decimal number, numSystem system)
         {

@@ -36,7 +36,7 @@ namespace Calculator.Forms
             textBox1.ForeColor = ColorTranslator.FromHtml("#F7FFF7");
             list = ParentForm.Controls["panelHistory"].Controls["listBox1"] as ListBox;
             keysChar = Constants.decChar;
-            buttons = new List<Button>() { button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, buttonA, buttonB, buttonC, buttonD, buttonE, buttonF };
+            buttons = new List<Button>() { button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, buttonA, buttonB, buttonC, buttonD, buttonE, buttonF, button11, button16, button21, button22, button19 };
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -217,50 +217,110 @@ namespace Calculator.Forms
                 buttons.ForEach(button => button.Enabled = false);
                 button10.Enabled = true;
                 button1.Enabled = true;
-                system = numSystem.bin;
-            }
-            else
-            {
-                if (radioButton2.Checked)
+                if (textBox1.Text != string.Empty)
                 {
-                    keysChar = Constants.octChar;
-                    buttons.ForEach(button => button.Enabled = false);
-                    button10.Enabled = true;
-                    button1.Enabled = true;
-                    button2.Enabled = true;
-                    button3.Enabled = true;
-                    button4.Enabled = true;
-                    button5.Enabled = true;
-                    button6.Enabled = true;
-                    button7.Enabled = true;
-                    system = numSystem.oct;
-                }
-                else
-                {
-                    if (radioButton3.Checked)
+                    if (MyConverter.fromString(textBox1.Text).operation != '!')
                     {
-                        keysChar = Constants.decChar;
-                        keysChar = Constants.octChar;
-                        buttons.ForEach(button => button.Enabled = false);
-                        button10.Enabled = true;
-                        button1.Enabled = true;
-                        button2.Enabled = true;
-                        button3.Enabled = true;
-                        button4.Enabled = true;
-                        button5.Enabled = true;
-                        button6.Enabled = true;
-                        button7.Enabled = true;
-                        button8.Enabled = true;
-                        button9.Enabled = true;
-                        system = numSystem.dec;
+                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.bin) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.bin);
                     }
                     else
                     {
-                        keysChar = Constants.hexChar;
-                        buttons.ForEach(button => button.Enabled = true);
-                        system = numSystem.hex;
+                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.bin);
                     }
                 }
+                system = numSystem.bin;          
+            }
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton2.Checked)
+            {
+                keysChar = Constants.octChar;
+                buttons.ForEach(button => button.Enabled = false);
+                button10.Enabled = true;
+                button1.Enabled = true;
+                button2.Enabled = true;
+                button3.Enabled = true;
+                button4.Enabled = true;
+                button5.Enabled = true;
+                button6.Enabled = true;
+                button7.Enabled = true;
+                if (textBox1.Text != string.Empty)
+                {
+                    if (MyConverter.fromString(textBox1.Text).operation != '!')
+                    {
+                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.oct) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.oct);
+                    }
+                    else
+                    {
+                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.oct);
+                    }
+                }
+                system = numSystem.oct;
+            }
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton3.Checked)
+            {
+                keysChar = Constants.decChar;
+                keysChar = Constants.octChar;
+                buttons.ForEach(button => button.Enabled = false);
+                button10.Enabled = true;
+                button1.Enabled = true;
+                button2.Enabled = true;
+                button3.Enabled = true;
+                button4.Enabled = true;
+                button5.Enabled = true;
+                button6.Enabled = true;
+                button7.Enabled = true;
+                button8.Enabled = true;
+                button9.Enabled = true;
+                button11.Enabled = true;
+                button16.Enabled = true;
+                button21.Enabled = true;
+                button22.Enabled = true;
+                button19.Enabled = true;
+                if (textBox1.Text != string.Empty)
+                {
+                    if (MyConverter.fromString(textBox1.Text).operation != '!')
+                    {
+                        textBox1.Text = MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system).ToString() + MyConverter.fromString(textBox1.Text).operation + MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system);
+                    }
+                    else
+                    {
+                        textBox1.Text = MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system).ToString();
+                    }
+                }
+                system = numSystem.dec;
+            }
+        }
+
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton4.Checked)
+            {
+                keysChar = Constants.hexChar;
+                buttons.ForEach(button => button.Enabled = true);
+                button11.Enabled = false;
+                button16.Enabled = false;
+                button21.Enabled = false;
+                button22.Enabled = false;
+                button19.Enabled = false;
+                if (textBox1.Text != string.Empty)
+                {
+                    if (MyConverter.fromString(textBox1.Text).operation != '!')
+                    {
+                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.hex) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.hex);
+                    }
+                    else
+                    {
+                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.hex);
+                    }
+                }
+                system = numSystem.hex;
             }
         }
     }

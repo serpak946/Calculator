@@ -17,15 +17,56 @@ namespace Calculator
     }
     public static class MyConverter
     {
-        public static string toDec(string s, numSystem system)
+        public static decimal toDec(string s, numSystem system)
         {
-            string s1;
-            string s2;
-            return "";
+            return Convert.ToInt32(s, ((int)system));
         }
-        public static string fromDec(string s, numSystem system)
+        public static string fromDec(decimal number, numSystem system)
         {
-            return "";
+            int x = (int)Math.Truncate(number);
+            string s = "";
+            do
+            {
+                int temp = 0 + x % ((int)system);
+                switch (temp)
+                {
+                    case 10:
+                        s = 'A' + s; break;
+                    case 11:
+                        s = 'B' + s; break;
+                    case 12:
+                        s = 'C' + s; break;
+                    case 13:
+                        s = 'D' + s; break;
+                    case 14:
+                        s = 'E' + s; break;
+                    case 15:
+                        s = 'F' + s; break;
+                    default:
+                        s = temp + s; break;
+                }
+                x = x / ((int)system);
+            } while (x > 0);
+            return s;
+        }
+        /// <summary>
+        /// Метод, который переводит текст в два числа и операцию, если одно число, то в качестве операции возвращает '!'
+        /// </summary>
+        /// <param name="s">Текстовая строка примера</param>
+        /// <returns>два числа и операция в типе char</returns>
+        public static (string x, string y, char operation) fromString(string s)
+        {
+            try
+            {
+                int n = s.LastIndexOf(s.Last(a => Constants.allOperations.Contains(a)));
+                string x = s.Substring(0, n);
+                string y = s.Substring(n + 1);
+                return (x, y, s[n]);
+            }
+            catch (InvalidOperationException)
+            {
+                return (s, s, '!');
+            }
         }
     }
     public interface ISimpleCalc
@@ -75,10 +116,9 @@ namespace Calculator
         {
             this.problem = s;
             system = numSystem.dec;
-            operationstring = s.Last(a => Constants.allOperations.Contains(a));
-            int n = s.LastIndexOf(operationstring);
-            x = Convert.ToDecimal(s.Substring(0, n));
-            y = Convert.ToDecimal(s.Substring(n+1));
+            x = Convert.ToDecimal(MyConverter.fromString(s).x);
+            y = Convert.ToDecimal(MyConverter.fromString(s).y);
+            operationstring = MyConverter.fromString(s).operation;
         }
         public DecSimpleCalc(decimal x, decimal y)
         {
@@ -139,10 +179,9 @@ namespace Calculator
         {
             this.problem = s;
             system = numSystem.bin;
-            operationstring = s.Last(a => Constants.allOperations.Contains(a));
-            int n = s.LastIndexOf(operationstring);
-            x = s.Substring(0, n);
-            y = s.Substring(n + 1);
+            operationstring = MyConverter.fromString(s).operation;
+            x = MyConverter.fromString(s).x.ToString();
+            y = MyConverter.fromString(s).y.ToString();
         }
         public BinSimpleCalc(string x, string y)
         {

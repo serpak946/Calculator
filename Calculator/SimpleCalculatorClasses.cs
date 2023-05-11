@@ -192,6 +192,11 @@ namespace Calculator
         }
         public string Sum()
         {
+            int zpt = (x.Length - x.IndexOf(',')) + (y.Length - y.IndexOf(','));
+            string x1 = x.Replace(",", "");
+            string y1 = y.Replace(",", "");
+
+
             return "";
         }
         public string Subtraction()

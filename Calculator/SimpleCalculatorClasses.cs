@@ -77,7 +77,6 @@ namespace Calculator
         string Subtraction();
         string Multiplication();
         string Divide();
-        string Pow();
     }
 
     public abstract class SimpCalc : ISimpleCalc
@@ -88,7 +87,41 @@ namespace Calculator
         public numSystem system { get; set; }
         public string problem { get; set; }
         private char Operationstring;
-        public char operationstring
+        public virtual char operationstring
+        {
+            get
+            {
+                return this.Operationstring;
+            }
+            set
+            {
+                switch (value)
+                {
+                    case '+':
+                        operation = Sum; break;
+                    case '-':
+                        operation = Subtraction; break;
+                    case '×':
+                        operation = Multiplication; break;
+                    case '÷':
+                        operation = Divide; break;
+                }
+                Operationstring = value;
+            }
+        }
+        public abstract string Sum();
+
+        public abstract string Subtraction();
+        public abstract string Multiplication();
+        public abstract string Divide();
+    }
+
+    public class DecSimpleCalc : SimpCalc
+    {
+        private decimal X { get; set; }
+        private decimal Y { get; set; }
+        private char Operationstring;
+        public override char operationstring
         {
             get
             {
@@ -112,18 +145,6 @@ namespace Calculator
                 Operationstring = value;
             }
         }
-        public abstract string Sum();
-
-        public abstract string Subtraction();
-        public abstract string Multiplication();
-        public abstract string Divide();
-        public abstract string Pow();
-    }
-
-    public class DecSimpleCalc : SimpCalc
-    {
-        private decimal X { get; set; }
-        private decimal Y { get; set; }
         public override string x
         {
             get { return X.ToString(); }
@@ -162,7 +183,7 @@ namespace Calculator
                 throw new DivideByZeroException();
             }
         }
-        public override string Pow() => Math.Pow((double)X, (double)Y).ToString("0.############################");
+        public string Pow() => Math.Pow((double)X, (double)Y).ToString("0.############################");
     }
 
     public class BinSimpleCalc : SimpCalc
@@ -188,8 +209,8 @@ namespace Calculator
         {
             if (x[0] == '-') return Subtraction(y, x.Substring(1, x.Length-1));
             (string x1, string y1) = significantZeros(x, y);
-            int n = x1.Length - x1.IndexOf('.') - 1;
-            x1 = x1.Replace(".", ""); y1 = y1.Replace(".", "");
+            int n = x1.Length - x1.IndexOf(',') - 1;
+            x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
             string result = string.Empty;
             int temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
@@ -198,14 +219,14 @@ namespace Calculator
                 temp = ((Convert.ToInt32(x1[i].ToString()) + Convert.ToInt32(y1[i].ToString()) + temp) / 2);
             }
             result = temp + result;
-            result = result.Insert(result.Length - n, ".");
+            result = result.Insert(result.Length - n, ",");
             return RemoveTrailingZerosAndDot(result);
         }
         private string Sum(string x, string y)
         {
             (string x1, string y1) = significantZeros(x, y);
-            int n = x1.Length - x1.IndexOf('.') - 1;
-            x1 = x1.Replace(".", ""); y1 = y1.Replace(".", "");
+            int n = x1.Length - x1.IndexOf(',') - 1;
+            x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
             string result = string.Empty;
             int temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
@@ -214,15 +235,15 @@ namespace Calculator
                 temp = ((Convert.ToInt32(x1[i].ToString()) + Convert.ToInt32(y1[i].ToString()) + temp) / 2);
             }
             result = temp + result;
-            result = result.Insert(result.Length - n, ".");
+            result = result.Insert(result.Length - n, ",");
             return RemoveTrailingZerosAndDot(result);
         }
         public override string Subtraction()
         {
             if (x[0] == '-') return "-"+Sum(x.Substring(1, x.Length-1), y);
             (string x1, string y1) = significantZeros(x, y);
-            int n = x1.Length - x1.IndexOf('.') - 1;
-            x1 = x1.Replace(".", ""); y1 = y1.Replace(".", "");
+            int n = x1.Length - x1.IndexOf(',') - 1;
+            x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
             bool sign = (Convert.ToInt32(x1) >= Convert.ToInt32(y1));
             if (!sign) (x1, y1) = (y1, x1);
             string result = string.Empty;
@@ -245,14 +266,14 @@ namespace Calculator
 
                 result = subtractedDigit + result;
             }
-            result = result.Insert(result.Length - n, ".");
+            result = result.Insert(result.Length - n, ",");
             return sign ? RemoveTrailingZerosAndDot(result) : "-" + RemoveTrailingZerosAndDot(result);
         }
         public string Subtraction(string x, string y)
         {
             (string x1, string y1) = significantZeros(x, y);
-            int n = x1.Length - x1.IndexOf('.') - 1;
-            x1 = x1.Replace(".", ""); y1 = y1.Replace(".", "");
+            int n = x1.Length - x1.IndexOf(',') - 1;
+            x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
             bool sign = (Convert.ToInt64(x1) >= Convert.ToInt64(y1));
             if (!sign) (x1, y1) = (y1, x1);
             string result = string.Empty;
@@ -275,7 +296,7 @@ namespace Calculator
 
                 result = subtractedDigit + result;
             }
-            result = result.Insert(result.Length - n, ".");
+            result = result.Insert(result.Length - n, ",");
             result = sign ? RemoveTrailingZerosAndDot(result) : "-" + RemoveTrailingZerosAndDot(result);
             return result != string.Empty ? result : "0";
         }
@@ -290,11 +311,11 @@ namespace Calculator
             }
             else
                 (x1, y1) = significantZeros(x, y);
-            int xDecimalPos = x1.IndexOf('.');
-            int yDecimalPos = y1.IndexOf('.');
+            int xDecimalPos = x1.IndexOf(',');
+            int yDecimalPos = y1.IndexOf(',');
             int n = (x1.Length - xDecimalPos) * 2 - 1;
-            x1 = x1.Replace(".", "");
-            y1 = y1.Replace(".", "");
+            x1 = x1.Replace(",", "");
+            y1 = y1.Replace(",", "");
             string result = string.Empty;
 
             for (int i = y1.Length - 1; i >= 0; i--)
@@ -322,7 +343,7 @@ namespace Calculator
                 result = Sum(result, partialResult);
             }
 
-            result = result.Insert(result.Length - n, ".");
+            result = result.Insert(result.Length - n, ",");
             result = RemoveTrailingZerosAndDot(result);
             return !sign?"-"+result:result;
         }
@@ -337,11 +358,11 @@ namespace Calculator
             }
             else
                 (x1, y1) = significantZeros(x, y);
-            int xDecimalPos = x1.IndexOf('.');
-            int yDecimalPos = y1.IndexOf('.');
+            int xDecimalPos = x1.IndexOf(',');
+            int yDecimalPos = y1.IndexOf(',');
             int n = (x1.Length - xDecimalPos) * 2 - 1;
-            x1 = x1.Replace(".", "");
-            y1 = y1.Replace(".", "");
+            x1 = x1.Replace(",", "");
+            y1 = y1.Replace(",", "");
             string result = string.Empty;
 
             for (int i = y1.Length - 1; i >= 0; i--)
@@ -369,7 +390,7 @@ namespace Calculator
                 result = Sum(result, partialResult);
             }
 
-            result = result.Insert(result.Length - n, ".");
+            result = result.Insert(result.Length - n, ",");
             result = RemoveTrailingZerosAndDot(result);
             return !sign ? "-" + result : result;
         }
@@ -380,22 +401,22 @@ namespace Calculator
             bool sign = (x[0] != '-');
             int accuracy = 20;
 
-            if (y.IndexOf('.') != -1)
+            if (y.IndexOf(',') != -1)
             {
-                int tempy = y.Length - y.IndexOf(".") - 1;
-                int tempx = x.IndexOf(".");
-                y1 = y.Replace(".", "");
-                x1 = x.Replace(".", "");
+                int tempy = y.Length - y.IndexOf(",") - 1;
+                int tempx = x.IndexOf(",");
+                y1 = y.Replace(",", "");
+                x1 = x.Replace(",", "");
                 x1 = x1 + "00000000000000000000";
                 if (tempx + tempy != x1.Length)
                 {
-                    x1 = x1.Insert(tempx + tempy, ".");
+                    x1 = x1.Insert(tempx + tempy, ",");
                 }
             }
             else
             {
                 y1 = y;
-                if (x.IndexOf('.') == -1)
+                if (x.IndexOf(',') == -1)
                 {
                     x1 = x + ".00000000000000000000";
                 }
@@ -412,7 +433,7 @@ namespace Calculator
             {
                 if (tempX < tempY)
                 {
-                    if (x1[0] != '.')
+                    if (x1[0] != ',')
                     {
                         result += '0';
                         tempX = tempX * 10 + Convert.ToInt64(x1[0].ToString());
@@ -420,7 +441,7 @@ namespace Calculator
                     }
                     else
                     {
-                        result += "0.";
+                        result += "0,";
                         tempX = tempX * 10 + Convert.ToInt64(x1[1].ToString());
                         x1 = x1.Substring(2);
                     }
@@ -429,45 +450,40 @@ namespace Calculator
                 {
                     result += '1';
                     tempX = Convert.ToInt64(Subtraction(tempX.ToString(), tempY.ToString()));
-                    if (x1[0] != '.')
+                    if (x1[0] != ',')
                     {
                         tempX = tempX * 10 + Convert.ToInt64(x1[0].ToString());
                         x1 = x1.Substring(1);
                     }
                     else
                     {
-                        result += ".";
+                        result += ",";
                         tempX = tempX * 10 + Convert.ToInt64(x1[1].ToString());
                         x1 = x1.Substring(2);
                     }
                 }
                 if (x1.IndexOf('1') == -1 && tempX == 0) break;
-                if (x1.IndexOf('.') != -1) i--;
+                if (x1.IndexOf(',') != -1) i--;
             }
             result = RemoveTrailingZerosAndDot(result);
             return sign ? result : '-' + result;
         }
-
-        public override string Pow()
-        {
-            return "";
-        }
         private (string x, string y) significantZeros(string binaryNumber1, string binaryNumber2)
         {
             // Проверка, содержатся ли десятичные разделители в числах
-            bool hasDecimalPoint1 = binaryNumber1.Contains(".");
-            bool hasDecimalPoint2 = binaryNumber2.Contains(".");
+            bool hasDecimalPoint1 = binaryNumber1.Contains(",");
+            bool hasDecimalPoint2 = binaryNumber2.Contains(",");
 
             // Если число не содержит десятичного разделителя, добавляем его и ноль после
             if (!hasDecimalPoint1)
-                binaryNumber1 += ".0";
+                binaryNumber1 += ",0";
 
             if (!hasDecimalPoint2)
-                binaryNumber2 += ".0";
+                binaryNumber2 += ",0";
 
             // Разделение чисел на целую и дробную части
-            string[] parts1 = binaryNumber1.Split('.');
-            string[] parts2 = binaryNumber2.Split('.');
+            string[] parts1 = binaryNumber1.Split(',');
+            string[] parts2 = binaryNumber2.Split(',');
 
             // Получение целой и дробной частей для каждого числа
             string integerPart1 = parts1[0];
@@ -492,8 +508,8 @@ namespace Calculator
             fractionalPart2 = fractionalPart2.PadRight(maxFractionalPartLength, '0');
 
             // Склеивание чисел с добавленными нулями
-            string paddedNumber1 = integerPart1 + "." + fractionalPart1;
-            string paddedNumber2 = integerPart2 + "." + fractionalPart2;
+            string paddedNumber1 = integerPart1 + "," + fractionalPart1;
+            string paddedNumber2 = integerPart2 + "," + fractionalPart2;
 
             return (paddedNumber1, paddedNumber2);
         }
@@ -506,12 +522,12 @@ namespace Calculator
             number = number.TrimEnd('0');
 
             // Удаление точки, если она является последним символом
-            if (number.EndsWith("."))
+            if (number.EndsWith(","))
             {
-                number = number.TrimEnd('.');
+                number = number.TrimEnd(',');
             }
 
-            if (number.StartsWith("."))
+            if (number.StartsWith(","))
             {
                 number = '0' + number;
             }

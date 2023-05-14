@@ -51,7 +51,7 @@ namespace Calculator.Forms
             textBox1.ForeColor = ColorTranslator.FromHtml("#F7FFF7");
             list = ParentForm.Controls["panelHistory"].Controls["listBox1"] as ListBox;
             keysChar = Constants.decChar;
-            buttons = new List<Button>() { button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, buttonA, buttonB, buttonC, buttonD, buttonE, buttonF, button11, button16, button21, button22, button19 };
+            buttons = new List<Button>() { button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, buttonA, buttonB, buttonC, buttonD, buttonE, buttonF, button21, button22, button19, button17, button18 };
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -62,7 +62,7 @@ namespace Calculator.Forms
                 if (numOfOp(textBox1.Text) == 2)
                 {
                     char t = textBox1.Text[textBox1.TextLength - 1];
-                    DecSimpleCalc calc = new DecSimpleCalc(textBox1.Text.Substring(0, textBox1.Text.Length - 1));
+                    SimpCalc calc = chooseClass(textBox1.Text.Substring(0, textBox1.Text.Length - 1));
                     textBox1.Text = calc.operation().ToString() + t;
                     new History(calc, list);
                 }
@@ -188,14 +188,14 @@ namespace Calculator.Forms
                 n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => Constants.allOperations.Contains(a)));
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
-                textBox1.Text += (new DecSimpleCalc("1÷" + s)).operation();
-                new History(new DecSimpleCalc("1÷" + s), list);
+                textBox1.Text += (chooseClass("1÷" + s)).operation();
+                new History(chooseClass("1÷" + s), list);
             }
             catch (InvalidOperationException)
             {
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
-                textBox1.Text = (new DecSimpleCalc("1÷" + s)).operation();
-                new History(new DecSimpleCalc("1÷" + s), list);
+                textBox1.Text = (chooseClass("1÷" + s)).operation();
+                new History(chooseClass("1÷" + s), list);
             }
         }
 
@@ -213,14 +213,14 @@ namespace Calculator.Forms
                 n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => Constants.allOperations.Contains(a)));
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
-                textBox1.Text += (new DecSimpleCalc(s + "^2")).operation();
-                new History(new DecSimpleCalc(s + "^2"), list);
+                textBox1.Text += (chooseClass(s + "^2")).operation();
+                new History(chooseClass(s + "^2"), list);
             }
             catch (InvalidOperationException)
             {
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
-                textBox1.Text = (new DecSimpleCalc(s + "^2")).operation();
-                new History(new DecSimpleCalc(s + "^2"), list);
+                textBox1.Text = (chooseClass(s + "^2")).operation();
+                new History(chooseClass(s + "^2"), list);
             }
         }
 
@@ -292,11 +292,11 @@ namespace Calculator.Forms
                 button7.Enabled = true;
                 button8.Enabled = true;
                 button9.Enabled = true;
-                button11.Enabled = true;
-                button16.Enabled = true;
                 button21.Enabled = true;
                 button22.Enabled = true;
                 button19.Enabled = true;
+                button17.Enabled = true;
+                button18.Enabled = true;
                 if (textBox1.Text != string.Empty)
                 {
                     if (MyConverter.fromString(textBox1.Text).operation != '!')
@@ -318,11 +318,11 @@ namespace Calculator.Forms
             {
                 keysChar = Constants.hexChar;
                 buttons.ForEach(button => button.Enabled = true);
-                button11.Enabled = false;
-                button16.Enabled = false;
                 button21.Enabled = false;
                 button22.Enabled = false;
                 button19.Enabled = false;
+                button17.Enabled = false;
+                button18.Enabled = false;
                 if (textBox1.Text != string.Empty)
                 {
                     if (MyConverter.fromString(textBox1.Text).operation != '!')

@@ -35,7 +35,7 @@ namespace Calculator.Forms
                 case numSystem.bin:
                     return new BinSimpleCalc(s);
                 case numSystem.oct:
-                    return null;
+                    return new OctSimpleCalc(s);
                 case numSystem.dec:
                     return new DecSimpleCalc(s);
                 case numSystem.hex:
@@ -86,6 +86,7 @@ namespace Calculator.Forms
                     buttonEqual_Click(sender, e);
                 }
             }
+            catch (ArgumentOutOfRangeException) { MessageBox.Show("Не пример"); }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 

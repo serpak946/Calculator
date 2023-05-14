@@ -114,6 +114,72 @@ namespace Calculator
         public abstract string Subtraction();
         public abstract string Multiplication();
         public abstract string Divide();
+        public (string x, string y) significantZeros(string binaryNumber1, string binaryNumber2)
+        {
+            // Проверка, содержатся ли десятичные разделители в числах
+            bool hasDecimalPoint1 = binaryNumber1.Contains(",");
+            bool hasDecimalPoint2 = binaryNumber2.Contains(",");
+
+            // Если число не содержит десятичного разделителя, добавляем его и ноль после
+            if (!hasDecimalPoint1)
+                binaryNumber1 += ",0";
+
+            if (!hasDecimalPoint2)
+                binaryNumber2 += ",0";
+
+            // Разделение чисел на целую и дробную части
+            string[] parts1 = binaryNumber1.Split(',');
+            string[] parts2 = binaryNumber2.Split(',');
+
+            // Получение целой и дробной частей для каждого числа
+            string integerPart1 = parts1[0];
+            string fractionalPart1 = parts1[1];
+            string integerPart2 = parts2[0];
+            string fractionalPart2 = parts2[1];
+
+            // Вычисление максимальной длины целой и дробной частей
+            int maxIntegerPartLength = Math.Max(integerPart1.Length, integerPart2.Length);
+            int maxFractionalPartLength = Math.Max(fractionalPart1.Length, fractionalPart2.Length);
+
+            // Добавление незначащих нулей для целой части первого числа
+            integerPart1 = integerPart1.PadLeft(maxIntegerPartLength, '0');
+
+            // Добавление незначащих нулей для дробной части первого числа
+            fractionalPart1 = fractionalPart1.PadRight(maxFractionalPartLength, '0');
+
+            // Добавление незначащих нулей для целой части второго числа
+            integerPart2 = integerPart2.PadLeft(maxIntegerPartLength, '0');
+
+            // Добавление незначащих нулей для дробной части второго числа
+            fractionalPart2 = fractionalPart2.PadRight(maxFractionalPartLength, '0');
+
+            // Склеивание чисел с добавленными нулями
+            string paddedNumber1 = integerPart1 + "," + fractionalPart1;
+            string paddedNumber2 = integerPart2 + "," + fractionalPart2;
+
+            return (paddedNumber1, paddedNumber2);
+        }
+        public string RemoveTrailingZerosAndDot(string number)
+        {
+            // Удаление незначащих нулей слева
+            number = number.TrimStart('0');
+
+            // Удаление незначащих нулей справа
+            number = number.TrimEnd('0');
+
+            // Удаление точки, если она является последним символом
+            if (number.EndsWith(","))
+            {
+                number = number.TrimEnd(',');
+            }
+
+            if (number.StartsWith(","))
+            {
+                number = '0' + number;
+            }
+
+            return number;
+        }
     }
 
     public class DecSimpleCalc : SimpCalc
@@ -195,9 +261,7 @@ namespace Calculator
             if (s.ToCharArray().Except(Constants.binChar).Any()) throw new ArgumentException("Недопустимые символы");
             this.problem = s;
             system = numSystem.bin;
-            operationstring = MyConverter.fromString(s).operation;
-            x = MyConverter.fromString(s).x.ToString();
-            y = MyConverter.fromString(s).y.ToString();
+            (x, y, operationstring) = MyConverter.fromString(s);
         }
         public BinSimpleCalc(string x, string y)
         {
@@ -212,11 +276,11 @@ namespace Calculator
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
             string result = string.Empty;
-            int temp = 0;
+            long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                result = ((Convert.ToInt32(x1[i]) + Convert.ToInt32(y1[i]) + temp) % 2) + result;
-                temp = ((Convert.ToInt32(x1[i].ToString()) + Convert.ToInt32(y1[i].ToString()) + temp) / 2);
+                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 2) + result;
+                temp = ((Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 2);
             }
             result = temp + result;
             result = result.Insert(result.Length - n, ",");
@@ -228,11 +292,11 @@ namespace Calculator
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
             string result = string.Empty;
-            int temp = 0;
+            long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                result = ((Convert.ToInt32(x1[i]) + Convert.ToInt32(y1[i]) + temp) % 2) + result;
-                temp = ((Convert.ToInt32(x1[i].ToString()) + Convert.ToInt32(y1[i].ToString()) + temp) / 2);
+                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 2) + result;
+                temp = ((Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 2);
             }
             result = temp + result;
             result = result.Insert(result.Length - n, ",");
@@ -244,16 +308,16 @@ namespace Calculator
             (string x1, string y1) = significantZeros(x, y);
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
-            bool sign = (Convert.ToInt32(x1) >= Convert.ToInt32(y1));
+            bool sign = (Convert.ToInt64(x1) >= Convert.ToInt64(y1));
             if (!sign) (x1, y1) = (y1, x1);
             string result = string.Empty;
-            int temp = 0;
+            long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                int digitX = Convert.ToInt32(x1[i].ToString());
-                int digitY = Convert.ToInt32(y1[i].ToString());
+                long digitX = Convert.ToInt64(x1[i].ToString());
+                long digitY = Convert.ToInt64(y1[i].ToString());
 
-                int subtractedDigit = digitX - digitY - temp;
+                long subtractedDigit = digitX - digitY - temp;
                 if (subtractedDigit < 0)
                 {
                     subtractedDigit += 2;
@@ -320,15 +384,15 @@ namespace Calculator
 
             for (int i = y1.Length - 1; i >= 0; i--)
             {
-                int digitY = Convert.ToInt32(y1[i].ToString());
+                long digitY = Convert.ToInt64(y1[i].ToString());
                 string partialResult = string.Empty;
-                int carry = 0;
+                long carry = 0;
 
                 for (int j = x1.Length - 1; j >= 0; j--)
                 {
-                    int digitX = Convert.ToInt32(x1[j].ToString());
-                    int product = (digitX * digitY) + carry;
-                    int remainder = product % 2;
+                    long digitX = Convert.ToInt64(x1[j].ToString());
+                    long product = (digitX * digitY) + carry;
+                    long remainder = product % 2;
                     carry = product / 2;
                     partialResult = remainder + partialResult;
                 }
@@ -367,15 +431,15 @@ namespace Calculator
 
             for (int i = y1.Length - 1; i >= 0; i--)
             {
-                int digitY = Convert.ToInt32(y1[i].ToString());
+                long digitY = Convert.ToInt64(y1[i].ToString());
                 string partialResult = string.Empty;
-                int carry = 0;
+                long carry = 0;
 
                 for (int j = x1.Length - 1; j >= 0; j--)
                 {
-                    int digitX = Convert.ToInt32(x1[j].ToString());
-                    int product = (digitX * digitY) + carry;
-                    int remainder = product % 2;
+                    long digitX = Convert.ToInt64(x1[j].ToString());
+                    long product = (digitX * digitY) + carry;
+                    long remainder = product % 2;
                     carry = product / 2;
                     partialResult = remainder + partialResult;
                 }
@@ -468,72 +532,218 @@ namespace Calculator
             result = RemoveTrailingZerosAndDot(result);
             return sign ? result : '-' + result;
         }
-        private (string x, string y) significantZeros(string binaryNumber1, string binaryNumber2)
+    }
+    public class OctSimpleCalc : SimpCalc
+    {
+        public override string x { get; set; }
+        public override string y { get; set; }
+        public OctSimpleCalc(string s)
         {
-            // Проверка, содержатся ли десятичные разделители в числах
-            bool hasDecimalPoint1 = binaryNumber1.Contains(",");
-            bool hasDecimalPoint2 = binaryNumber2.Contains(",");
-
-            // Если число не содержит десятичного разделителя, добавляем его и ноль после
-            if (!hasDecimalPoint1)
-                binaryNumber1 += ",0";
-
-            if (!hasDecimalPoint2)
-                binaryNumber2 += ",0";
-
-            // Разделение чисел на целую и дробную части
-            string[] parts1 = binaryNumber1.Split(',');
-            string[] parts2 = binaryNumber2.Split(',');
-
-            // Получение целой и дробной частей для каждого числа
-            string integerPart1 = parts1[0];
-            string fractionalPart1 = parts1[1];
-            string integerPart2 = parts2[0];
-            string fractionalPart2 = parts2[1];
-
-            // Вычисление максимальной длины целой и дробной частей
-            int maxIntegerPartLength = Math.Max(integerPart1.Length, integerPart2.Length);
-            int maxFractionalPartLength = Math.Max(fractionalPart1.Length, fractionalPart2.Length);
-
-            // Добавление незначащих нулей для целой части первого числа
-            integerPart1 = integerPart1.PadLeft(maxIntegerPartLength, '0');
-
-            // Добавление незначащих нулей для дробной части первого числа
-            fractionalPart1 = fractionalPart1.PadRight(maxFractionalPartLength, '0');
-
-            // Добавление незначащих нулей для целой части второго числа
-            integerPart2 = integerPart2.PadLeft(maxIntegerPartLength, '0');
-
-            // Добавление незначащих нулей для дробной части второго числа
-            fractionalPart2 = fractionalPart2.PadRight(maxFractionalPartLength, '0');
-
-            // Склеивание чисел с добавленными нулями
-            string paddedNumber1 = integerPart1 + "," + fractionalPart1;
-            string paddedNumber2 = integerPart2 + "," + fractionalPart2;
-
-            return (paddedNumber1, paddedNumber2);
+            if (s.ToCharArray().Except(Constants.octChar).Any()) throw new ArgumentException("Недопустимые символы");
+            this.problem = s;
+            system = numSystem.oct;
+            operationstring = MyConverter.fromString(s).operation;
+            x = MyConverter.fromString(s).x.ToString();
+            y = MyConverter.fromString(s).y.ToString();
         }
-        private string RemoveTrailingZerosAndDot(string number)
+        public OctSimpleCalc(string x, string y)
         {
-            // Удаление незначащих нулей слева
-            number = number.TrimStart('0');
-
-            // Удаление незначащих нулей справа
-            number = number.TrimEnd('0');
-
-            // Удаление точки, если она является последним символом
-            if (number.EndsWith(","))
+            this.x = x;
+            this.y = y;
+            system = numSystem.oct;
+        }
+        public override string Sum()
+        {
+            if (x[0] == '-') return Subtraction(y, x.Substring(1, x.Length - 1));
+            (string x1, string y1) = significantZeros(x, y);
+            int n = x1.Length - x1.IndexOf(',') - 1;
+            x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
+            string result = string.Empty;
+            long temp = 0;
+            for (int i = x1.Length - 1; i >= 0; i--)
             {
-                number = number.TrimEnd(',');
+                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 8) + result;
+                temp = ((Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 8);
+            }
+            result = temp + result;
+            result = result.Insert(result.Length - n, ",");
+            return RemoveTrailingZerosAndDot(result);
+        }
+        private string Sum(string x, string y)
+        {
+            (string x1, string y1) = significantZeros(x, y);
+            int n = x1.Length - x1.IndexOf(',') - 1;
+            x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
+            string result = string.Empty;
+            long temp = 0;
+            for (int i = x1.Length - 1; i >= 0; i--)
+            {
+                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 8) + result;
+                temp = ((Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 8);
+            }
+            result = temp + result;
+            result = result.Insert(result.Length - n, ",");
+            return RemoveTrailingZerosAndDot(result);
+        }
+        public override string Subtraction()
+        {
+            if (x[0] == '-') return "-" + Sum(x.Substring(1, x.Length - 1), y);
+            (string x1, string y1) = significantZeros(x, y);
+            int n = x1.Length - x1.IndexOf(',') - 1;
+            x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
+            bool sign = (Convert.ToInt64(x1) >= Convert.ToInt64(y1));
+            if (!sign) (x1, y1) = (y1, x1);
+            string result = string.Empty;
+            long temp = 0;
+            for (int i = x1.Length - 1; i >= 0; i--)
+            {
+                long digitX = Convert.ToInt64(x1[i].ToString());
+                long digitY = Convert.ToInt64(y1[i].ToString());
+
+                long subtractedDigit = digitX - digitY - temp;
+                if (subtractedDigit < 0)
+                {
+                    subtractedDigit += 8;
+                    temp = 1;
+                }
+                else
+                {
+                    temp = 0;
+                }
+
+                result = subtractedDigit + result;
+            }
+            result = result.Insert(result.Length - n, ",");
+            return sign ? RemoveTrailingZerosAndDot(result) : "-" + RemoveTrailingZerosAndDot(result);
+        }
+        public string Subtraction(string x, string y)
+        {
+            (string x1, string y1) = significantZeros(x, y);
+            int n = x1.Length - x1.IndexOf(',') - 1;
+            x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
+            bool sign = (Convert.ToInt64(x1) >= Convert.ToInt64(y1));
+            if (!sign) (x1, y1) = (y1, x1);
+            string result = string.Empty;
+            int temp = 0;
+            for (int i = x1.Length - 1; i >= 0; i--)
+            {
+                long digitX = Convert.ToInt64(x1[i].ToString());
+                long digitY = Convert.ToInt64(y1[i].ToString());
+
+                long subtractedDigit = digitX - digitY - temp;
+                if (subtractedDigit < 0)
+                {
+                    subtractedDigit += 8;
+                    temp = 1;
+                }
+                else
+                {
+                    temp = 0;
+                }
+
+                result = subtractedDigit + result;
+            }
+            result = result.Insert(result.Length - n, ",");
+            result = sign ? RemoveTrailingZerosAndDot(result) : "-" + RemoveTrailingZerosAndDot(result);
+            return result != string.Empty ? result : "0";
+        }
+        public override string Multiplication()
+        {
+            bool sign = true;
+            string x1, y1;
+            if (x[0] == '-')
+            {
+                sign = false;
+                (x1, y1) = significantZeros(x.Substring(1, x.Length - 1), y);
+            }
+            else
+                (x1, y1) = significantZeros(x, y);
+            int xDecimalPos = x1.IndexOf(',');
+            int yDecimalPos = y1.IndexOf(',');
+            int n = (x1.Length - xDecimalPos) * 8 - 1;
+            x1 = x1.Replace(",", "");
+            y1 = y1.Replace(",", "");
+            string result = string.Empty;
+
+            for (int i = y1.Length - 1; i >= 0; i--)
+            {
+                long digitY = Convert.ToInt64(y1[i].ToString());
+                string partialResult = string.Empty;
+                long carry = 0;
+
+                for (int j = x1.Length - 1; j >= 0; j--)
+                {
+                    long digitX = Convert.ToInt64(x1[j].ToString());
+                    long product = (digitX * digitY) + carry;
+                    long remainder = product % 8;
+                    carry = product / 8;
+                    partialResult = remainder + partialResult;
+                }
+
+                if (carry > 0)
+                {
+                    partialResult = carry + partialResult;
+                }
+
+                int decimalPos = (y1.Length - 1 - i) + (x1.Length - xDecimalPos - 1);
+                partialResult = partialResult.PadRight(decimalPos + partialResult.Length, '0');
+                result = Sum(result, partialResult);
             }
 
-            if (number.StartsWith(","))
+            result = result.Insert(result.Length - n, ",");
+            result = RemoveTrailingZerosAndDot(result);
+            return !sign ? "-" + result : result;
+        }
+        public string Multiplication(string x, string y)
+        {
+            bool sign = true;
+            string x1, y1;
+            if (x[0] == '-')
             {
-                number = '0' + number;
+                sign = false;
+                (x1, y1) = significantZeros(x.Substring(1, x.Length - 1), y);
+            }
+            else
+                (x1, y1) = significantZeros(x, y);
+            int xDecimalPos = x1.IndexOf(',');
+            int yDecimalPos = y1.IndexOf(',');
+            int n = (x1.Length - xDecimalPos) * 2 - 1;
+            x1 = x1.Replace(",", "");
+            y1 = y1.Replace(",", "");
+            string result = string.Empty;
+
+            for (int i = y1.Length - 1; i >= 0; i--)
+            {
+                long digitY = Convert.ToInt64(y1[i].ToString());
+                string partialResult = string.Empty;
+                long carry = 0;
+
+                for (int j = x1.Length - 1; j >= 0; j--)
+                {
+                    long digitX = Convert.ToInt64(x1[j].ToString());
+                    long product = (digitX * digitY) + carry;
+                    long remainder = product % 2;
+                    carry = product / 2;
+                    partialResult = remainder + partialResult;
+                }
+
+                if (carry > 0)
+                {
+                    partialResult = carry + partialResult;
+                }
+
+                int decimalPos = (y1.Length - 1 - i) + (x1.Length - xDecimalPos - 1);
+                partialResult = partialResult.PadRight(decimalPos + partialResult.Length, '0');
+                result = Sum(result, partialResult);
             }
 
-            return number;
+            result = result.Insert(result.Length - n, ",");
+            result = RemoveTrailingZerosAndDot(result);
+            return !sign ? "-" + result : result;
         }
-
+        public override string Divide()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

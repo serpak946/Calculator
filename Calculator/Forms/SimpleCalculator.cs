@@ -37,8 +37,8 @@ namespace Calculator.Forms
             list = ParentForm.Controls["panelHistory"].Controls["listBox1"] as ListBox;
             keysChar = Constants.decChar;
             buttons = new List<Button>() { button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, buttonA, buttonB, buttonC, buttonD, buttonE, buttonF, button11, button16, button21, button22, button19 };
-            BinSimpleCalc binSimpleCalc = new BinSimpleCalc("11111.01÷101.1");
-            MessageBox.Show(binSimpleCalc.operation().ToString());
+            //BinSimpleCalc binSimpleCalc = new BinSimpleCalc("11111.01÷101.1");
+            //MessageBox.Show(binSimpleCalc.operation().ToString());
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

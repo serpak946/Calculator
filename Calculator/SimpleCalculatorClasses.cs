@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Calculator
 {
@@ -236,16 +238,16 @@ namespace Calculator
             (string x1, string y1) = significantZeros(x, y);
             int n = x1.Length - x1.IndexOf('.') - 1;
             x1 = x1.Replace(".", ""); y1 = y1.Replace(".", "");
-            bool sign = (Convert.ToInt32(x1) >= Convert.ToInt32(y1));
+            bool sign = (Convert.ToInt64(x1) >= Convert.ToInt64(y1));
             if (!sign) (x1, y1) = (y1, x1);
             string result = string.Empty;
             int temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                int digitX = Convert.ToInt32(x1[i].ToString());
-                int digitY = Convert.ToInt32(y1[i].ToString());
+                long digitX = Convert.ToInt64(x1[i].ToString());
+                long digitY = Convert.ToInt64(y1[i].ToString());
 
-                int subtractedDigit = digitX - digitY - temp;
+                long subtractedDigit = digitX - digitY - temp;
                 if (subtractedDigit < 0)
                 {
                     subtractedDigit += 2;
@@ -259,7 +261,8 @@ namespace Calculator
                 result = subtractedDigit + result;
             }
             result = result.Insert(result.Length - n, ".");
-            return sign ? RemoveTrailingZerosAndDot(result) : "-" + RemoveTrailingZerosAndDot(result);
+            result = sign ? RemoveTrailingZerosAndDot(result) : "-" + RemoveTrailingZerosAndDot(result);
+            return result != string.Empty ? result : "0";
         }
         public override string Multiplication()
         {
@@ -308,103 +311,126 @@ namespace Calculator
             result = RemoveTrailingZerosAndDot(result);
             return !sign?"-"+result:result;
         }
+        public string Multiplication(string x, string y)
+        {
+            bool sign = true;
+            string x1, y1;
+            if (x[0] == '-')
+            {
+                sign = false;
+                (x1, y1) = significantZeros(x.Substring(1, x.Length - 1), y);
+            }
+            else
+                (x1, y1) = significantZeros(x, y);
+            int xDecimalPos = x1.IndexOf('.');
+            int yDecimalPos = y1.IndexOf('.');
+            int n = (x1.Length - xDecimalPos) * 2 - 1;
+            x1 = x1.Replace(".", "");
+            y1 = y1.Replace(".", "");
+            string result = string.Empty;
 
+            for (int i = y1.Length - 1; i >= 0; i--)
+            {
+                int digitY = Convert.ToInt32(y1[i].ToString());
+                string partialResult = string.Empty;
+                int carry = 0;
+
+                for (int j = x1.Length - 1; j >= 0; j--)
+                {
+                    int digitX = Convert.ToInt32(x1[j].ToString());
+                    int product = (digitX * digitY) + carry;
+                    int remainder = product % 2;
+                    carry = product / 2;
+                    partialResult = remainder + partialResult;
+                }
+
+                if (carry > 0)
+                {
+                    partialResult = carry + partialResult;
+                }
+
+                int decimalPos = (y1.Length - 1 - i) + (x1.Length - xDecimalPos - 1);
+                partialResult = partialResult.PadRight(decimalPos + partialResult.Length, '0');
+                result = Sum(result, partialResult);
+            }
+
+            result = result.Insert(result.Length - n, ".");
+            result = RemoveTrailingZerosAndDot(result);
+            return !sign ? "-" + result : result;
+        }
         public override string Divide()
         {
-            (string x1, string y1) = significantZeros(x, y);
-            int n = x1.Length - x1.IndexOf('.') - 1;
-            x1 = x1.Replace(".", ""); y1 = y1.Replace(".", "");
+            string x1 = string.Empty, y1 = string.Empty;
             string result = string.Empty;
-            int decimalPointIndex = 0;
-            bool decimalPointInserted = false;
+            int accuracy = 20;
 
-            // Check if divisor is zero
-            if (y1 == "0")
+            if (y.IndexOf('.') != -1)
             {
-                throw new DivideByZeroException("Divisor cannot be zero.");
+                int tempy = y.Length - y.IndexOf(".") - 1;
+                int tempx = x.IndexOf(".");
+                y1 = y.Replace(".", "");
+                x1 = x.Replace(".", "");
+                x1 = x1 + "000000000000000000000000000000000000000000000000000000000000000000000000";
+                if (tempx + tempy != x1.Length)
+                {
+                    x1 = x1.Insert(tempx + tempy, ".");
+                }
             }
-
-            // Initialize dividend and remainder
-            string dividend = string.Empty;
-            string remainder = string.Empty;
-
-            // Divide the integer part of the dividend by the divisor
-            for (int i = 0; i < x1.Length; i++)
+            else
             {
-                dividend += x1[i].ToString();
-                int quotient = 0;
-                while (IsGreaterThanOrEqual(dividend, y1))
+                y1 = y;
+                if (x.IndexOf('.') == -1)
                 {
-                    dividend = Subtraction(dividend, y1);
-                    quotient++;
+                    x1 = x + ".000000000000000000000000000000000000000000000000000000000000000000000000";
                 }
-                result += quotient.ToString();
-            }
-
-            // Insert decimal point
-            result = result.Insert(result.Length - n, ".");
-            decimalPointIndex = result.IndexOf('.');
-
-            // Divide the fractional part of the dividend by the divisor
-            for (int i = 0; i < n; i++)
-            {
-                dividend += "0";
-                int quotient = 0;
-                while (IsGreaterThanOrEqual(dividend, y1))
+                else
                 {
-                    dividend = Subtraction(dividend, y1);
-                    quotient++;
-                }
-                result += quotient.ToString();
-
-                // Check if the fractional part is repeating
-                if (dividend == "0")
-                {
-                    break;
-                }
-                else if (!decimalPointInserted)
-                {
-                    remainder = dividend;
-                    dividend = string.Empty;
-                    result += ".";
-                    decimalPointInserted = true;
-                }
-                else if (dividend == remainder)
-                {
-                    result = result.Insert(decimalPointIndex + i + 2, "(");
-                    result += ")";
-                    break;
+                    x1 = x + "000000000000000000000000000000000000000000000000000000000000000000000000";
                 }
             }
 
-            // Remove trailing zeros and decimal point if necessary
-            result = RemoveTrailingZerosAndDot(result);
+            long tempY = Convert.ToInt64(y1);
+            long tempX = Convert.ToInt64(x1[0].ToString());
+            x1 = x1.Substring(1);
+            for (int i = 0; i < accuracy; i++)
+            {
+                if (tempX < tempY)
+                {
+                    if (x1[0] != '.')
+                    {
+                        result += '0';
+                        tempX = tempX * 10 + Convert.ToInt64(x1[0].ToString());
+                        x1 = x1.Substring(1);
+                    }
+                    else
+                    {
+                        result += "0.";
+                        tempX = tempX * 10 + Convert.ToInt64(x1[1].ToString());
+                        x1 = x1.Substring(2);
+                    }
+                }
+                else
+                {
+                    result += '1';
+                    tempX = Convert.ToInt64(Subtraction(tempX.ToString(), tempY.ToString()));
+                    if (x1[0] != '.')
+                    {
+                        tempX = tempX * 10 + Convert.ToInt64(x1[0].ToString());
+                        x1 = x1.Substring(1);
+                    }
+                    else
+                    {
+                        result += ".";
+                        tempX = tempX * 10 + Convert.ToInt64(x1[1].ToString());
+                        x1 = x1.Substring(2);
+                    }
+                }
+                if (x1.IndexOf('1') == -1 && tempX == 0) break;
+            }
 
-            return result;
+            return RemoveTrailingZerosAndDot(result);
         }
-        private bool IsGreaterThanOrEqual(string x, string y)
-        {
-            // Pad x and y with leading zeros to make them the same length
-            int maxLength = Math.Max(x.Length, y.Length);
-            x = x.PadLeft(maxLength, '0');
-            y = y.PadLeft(maxLength, '0');
 
-            // Compare x and y
-            for (int i = 0; i < maxLength; i++)
-            {
-                if (x[i] > y[i])
-                {
-                    return true;
-                }
-                else if (x[i] < y[i])
-                {
-                    return false;
-                }
-            }
-
-            // x and y are equal
-            return true;
-        }
         public override string Pow()
         {
             return "";
@@ -466,6 +492,11 @@ namespace Calculator
             if (number.EndsWith("."))
             {
                 number = number.TrimEnd('.');
+            }
+
+            if (number.StartsWith("."))
+            {
+                number = '0' + number;
             }
 
             return number;

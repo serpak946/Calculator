@@ -72,6 +72,7 @@ namespace Calculator
         Operation operation { get; set; }
         string problem { get; set; }
         numSystem system { get; set; }
+        char operationstring { get; set; }
         string Sum();
         string Subtraction();
         string Multiplication();
@@ -82,8 +83,8 @@ namespace Calculator
     public abstract class SimpCalc : ISimpleCalc
     {
         public Operation operation { get; set; }
-        public string x { get; set; }
-        public string y { get; set; }
+        public abstract string x { get; set; }
+        public abstract string y { get; set; }
         public numSystem system { get; set; }
         public string problem { get; set; }
         private char Operationstring;
@@ -121,42 +122,56 @@ namespace Calculator
 
     public class DecSimpleCalc : SimpCalc
     {
-        public new decimal x, y;
+        private decimal X { get; set; }
+        private decimal Y { get; set; }
+        public override string x
+        {
+            get { return X.ToString(); }
+            set { X = Convert.ToDecimal(value); }
+        }
+        public override string y
+        {
+            get { return Y.ToString(); }
+            set { Y = Convert.ToDecimal(value); }
+        }
         public DecSimpleCalc(string s)
         {
             this.problem = s;
             system = numSystem.dec;
-            x = Convert.ToDecimal(MyConverter.fromString(s).x);
-            y = Convert.ToDecimal(MyConverter.fromString(s).y);
+            X = Convert.ToDecimal(MyConverter.fromString(s).x);
+            Y = Convert.ToDecimal(MyConverter.fromString(s).y);
             operationstring = MyConverter.fromString(s).operation;
         }
-        public DecSimpleCalc(decimal x, decimal y)
+        public DecSimpleCalc(decimal X, decimal Y)
         {
-            this.x = x;
-            this.y = y;
+            this.X = X;
+            this.Y = Y;
             system = numSystem.dec;
         }
-        public override string Sum() => (x + y).ToString("G0");
-        public override string Subtraction() => (x - y).ToString("G0");
-        public override string Multiplication() => (x * y).ToString("G0");
+        public override string Sum() => (X + Y).ToString("G0");
+        public override string Subtraction() => (X - Y).ToString("G0");
+        public override string Multiplication() => (X * Y).ToString("G0");
         public override string Divide()
         {
-            if (y != 0)
+            if (Y != 0)
             {
-                return (x / y).ToString("0.############################");
+                return (X / Y).ToString("0.############################");
             }
             else
             {
                 throw new DivideByZeroException();
             }
         }
-        public override string Pow() => Math.Pow((double)x, (double)y).ToString("0.############################");
+        public override string Pow() => Math.Pow((double)X, (double)Y).ToString("0.############################");
     }
 
     public class BinSimpleCalc : SimpCalc
     {
+        public override string x { get; set; }
+        public override string y { get; set; }
         public BinSimpleCalc(string s)
         {
+            if (s.ToCharArray().Except(Constants.binChar).Any()) throw new ArgumentException("Недопустимые символы");
             this.problem = s;
             system = numSystem.bin;
             operationstring = MyConverter.fromString(s).operation;
@@ -362,6 +377,7 @@ namespace Calculator
         {
             string x1 = string.Empty, y1 = string.Empty;
             string result = string.Empty;
+            bool sign = (x[0] != '-');
             int accuracy = 20;
 
             if (y.IndexOf('.') != -1)
@@ -370,7 +386,7 @@ namespace Calculator
                 int tempx = x.IndexOf(".");
                 y1 = y.Replace(".", "");
                 x1 = x.Replace(".", "");
-                x1 = x1 + "000000000000000000000000000000000000000000000000000000000000000000000000";
+                x1 = x1 + "00000000000000000000";
                 if (tempx + tempy != x1.Length)
                 {
                     x1 = x1.Insert(tempx + tempy, ".");
@@ -381,11 +397,11 @@ namespace Calculator
                 y1 = y;
                 if (x.IndexOf('.') == -1)
                 {
-                    x1 = x + ".000000000000000000000000000000000000000000000000000000000000000000000000";
+                    x1 = x + ".00000000000000000000";
                 }
                 else
                 {
-                    x1 = x + "000000000000000000000000000000000000000000000000000000000000000000000000";
+                    x1 = x + "00000000000000000000";
                 }
             }
 
@@ -426,9 +442,10 @@ namespace Calculator
                     }
                 }
                 if (x1.IndexOf('1') == -1 && tempX == 0) break;
+                if (x1.IndexOf('.') != -1) i--;
             }
-
-            return RemoveTrailingZerosAndDot(result);
+            result = RemoveTrailingZerosAndDot(result);
+            return sign ? result : '-' + result;
         }
 
         public override string Pow()

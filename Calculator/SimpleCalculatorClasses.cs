@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Calculator
 {
@@ -271,7 +269,7 @@ namespace Calculator
         }
         public override string Sum()
         {
-            if (x[0] == '-') return Subtraction(y, x.Substring(1, x.Length-1));
+            if (x[0] == '-') return Subtraction(y, x.Substring(1, x.Length - 1));
             (string x1, string y1) = significantZeros(x, y);
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
@@ -304,7 +302,7 @@ namespace Calculator
         }
         public override string Subtraction()
         {
-            if (x[0] == '-') return "-"+Sum(x.Substring(1, x.Length-1), y);
+            if (x[0] == '-') return "-" + Sum(x.Substring(1, x.Length - 1), y);
             (string x1, string y1) = significantZeros(x, y);
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
@@ -371,7 +369,7 @@ namespace Calculator
             if (x[0] == '-')
             {
                 sign = false;
-                (x1, y1) = significantZeros(x.Substring(1, x.Length-1), y);
+                (x1, y1) = significantZeros(x.Substring(1, x.Length - 1), y);
             }
             else
                 (x1, y1) = significantZeros(x, y);
@@ -409,7 +407,7 @@ namespace Calculator
 
             result = result.Insert(result.Length - n, ",");
             result = RemoveTrailingZerosAndDot(result);
-            return !sign?"-"+result:result;
+            return !sign ? "-" + result : result;
         }
         public string Multiplication(string x, string y)
         {
@@ -468,10 +466,10 @@ namespace Calculator
             if (y.IndexOf(',') != -1)
             {
                 int tempy = y.Length - y.IndexOf(",") - 1;
-                int tempx = x.IndexOf(",");
+                int tempx = x.IndexOf(",") == -1 ? x.Length : x.IndexOf(",");
                 y1 = y.Replace(",", "");
                 x1 = x.Replace(",", "");
-                x1 = x1 + "00000000000000000000";
+                x1 = x1 + "00000000000000000000000";
                 if (tempx + tempy != x1.Length)
                 {
                     x1 = x1.Insert(tempx + tempy, ",");
@@ -482,11 +480,11 @@ namespace Calculator
                 y1 = y;
                 if (x.IndexOf(',') == -1)
                 {
-                    x1 = x + ".00000000000000000000";
+                    x1 = x + ".00000000000000000000000";
                 }
                 else
                 {
-                    x1 = x + "00000000000000000000";
+                    x1 = x + "00000000000000000000000";
                 }
             }
 

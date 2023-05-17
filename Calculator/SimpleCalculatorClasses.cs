@@ -16,17 +16,76 @@ namespace Calculator
     {
         public static decimal toDec(string s, numSystem system)
         {
+            if (s.IndexOf(",") == -1)
+                s = s + ",0";
+            string s1 = s.Substring(0, s.IndexOf(","));
+            string s2 = s.Substring(s.IndexOf(",") + 1, s.Length - s.IndexOf(",") - 1);
 
-
-            return Convert.ToInt32(s.Split(',')[0], ((int)system));
+            char[] tempArr = s1.ToCharArray();
+            Array.Reverse(tempArr);
+            s1 = new string(tempArr);
+            tempArr = null;
+            decimal result = 0;
+            int temp = 0;
+            while (s1 != "")
+            {
+                int c;
+                switch (s1[0])
+                {
+                    case 'A':
+                        c = 10; break;
+                    case 'B':
+                        c = 11; break;
+                    case 'C':
+                        c = 12; break;
+                    case 'D':
+                        c = 13; break;
+                    case 'E':
+                        c = 14; break;
+                    case 'F':
+                        c = 15; break;
+                    default:
+                        c = Convert.ToInt32(s1[0].ToString()); break;
+                }
+                result = result + (c * ((decimal)(Math.Pow(((int)system), temp))));
+                temp++;
+                s1 = s1.Remove(0, 1);
+            }
+            temp = -1;
+            while (s2 != "")
+            {
+                int c;
+                switch (s2[0])
+                {
+                    case 'A':
+                        c = 10; break;
+                    case 'B':
+                        c = 11; break;
+                    case 'C':
+                        c = 12; break;
+                    case 'D':
+                        c = 13; break;
+                    case 'E':
+                        c = 14; break;
+                    case 'F':
+                        c = 15; break;
+                    default:
+                        c = Convert.ToInt32(s2[0].ToString()); break;
+                }
+                result = result + (c * ((decimal)(Math.Pow(((int)system), temp))));
+                temp--;
+                s2 = s2.Remove(0, 1);
+            }
+            return result;
         }
         public static string fromDec(decimal number, numSystem system)
         {
-            int x = (int)Math.Truncate(number);
+            int x = ((int)Math.Truncate(number));
+            decimal x1 = number - x;
             string s = "";
             do
             {
-                int temp = 0 + x % ((int)system);
+                decimal temp = 0 + x % ((int)system);
                 switch (temp)
                 {
                     case 10:
@@ -46,6 +105,33 @@ namespace Calculator
                 }
                 x = x / ((int)system);
             } while (x > 0);
+            if (x1 != 0)
+            {
+                s += ",";
+                for (int i = 0; i < x1.ToString().Length+((1/((int)system))*32); i++)
+                {
+                    x1 *= (int)system;
+                    switch (Math.Truncate(x1))
+                    {
+                        case 10:
+                            s += 'A'; break;
+                        case 11:
+                            s += 'B'; break;
+                        case 12:
+                            s += 'C'; break;
+                        case 13:
+                            s += 'D'; break;
+                        case 14:
+                            s += 'E'; break;
+                        case 15:
+                            s += 'F'; break;
+                        default:
+                            s += Math.Truncate(x1); break;
+                    }
+                    x1 = x1 - Math.Truncate(x1);
+                    if (x1 == 0) break;
+                }
+            }
             return s;
         }
         /// <summary>
@@ -67,6 +153,61 @@ namespace Calculator
                 return (s, s, '!');
             }
         }
+        private static string RoundPeriod(string number)
+        {
+            int decimalPointIndex = number.IndexOf('.');
+
+            if (decimalPointIndex == -1)
+            {
+                return number; // Число не содержит десятичного разделителя, поэтому период отсутствует
+            }
+
+            string integerPart = number.Substring(0, decimalPointIndex);
+            string decimalPart = number.Substring(decimalPointIndex + 1);
+
+            int periodStartIndex = -1;
+            int periodLength = 0;
+
+            // Поиск начала периода
+            for (int i = 0; i < decimalPart.Length - 1; i++)
+            {
+                string currentSequence = decimalPart.Substring(i);
+
+                int sequenceLength = currentSequence.Length;
+                int maxPeriodLength = sequenceLength / 2;
+
+                for (int j = 1; j <= maxPeriodLength; j++)
+                {
+                    string pattern = currentSequence.Substring(0, j);
+                    string rest = currentSequence.Substring(j);
+
+                    if (rest.StartsWith(pattern))
+                    {
+                        periodStartIndex = i;
+                        periodLength = j;
+                        break;
+                    }
+                }
+
+                if (periodStartIndex != -1)
+                {
+                    break;
+                }
+            }
+
+            if (periodStartIndex == -1)
+            {
+                return number; // Период не найден, возвращаем исходное число без изменений
+            }
+
+            string roundedDecimalPart = decimalPart.Substring(0, periodStartIndex + periodLength);
+            roundedDecimalPart = roundedDecimalPart.PadRight(decimalPart.Length, '0'); // Заполняем нулями до оригинальной длины
+
+            string roundedNumber = $"{integerPart}.{roundedDecimalPart}";
+
+            return roundedNumber;
+        }
+
     }
     public interface ISimpleCalc
     {
@@ -180,22 +321,6 @@ namespace Calculator
             }
 
             return number;
-        }
-        public decimal toDec(string s, numSystem system)
-        {
-            if (s.IndexOf(",") == -1)
-                s = s + ",0";
-            string s1 = s.Substring(0, s.IndexOf(","));
-            string s2 = s.Substring(s.IndexOf(",") + 1, s.Length - s.IndexOf(",")-1);
-
-            char[] temp = s1.ToCharArray();
-            Array.Reverse(temp);
-            s1 = new string(temp);
-            temp = null;
-            GC.Collect();
-            MessageBox.Show(s1);
-
-            return Convert.ToInt32(s.Split(',')[0], ((int)system));
         }
     }
 

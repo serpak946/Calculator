@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace Calculator
 {
@@ -108,7 +107,7 @@ namespace Calculator
             if (x1 != 0)
             {
                 s += ",";
-                for (int i = 0; i < x1.ToString().Length+((1/((int)system))*32); i++)
+                for (int i = 0; i < x1.ToString().Length + ((1 / ((int)system)) * 32); i++)
                 {
                     x1 *= (int)system;
                     switch (Math.Truncate(x1))
@@ -256,6 +255,12 @@ namespace Calculator
         public abstract string Subtraction();
         public abstract string Multiplication();
         public abstract string Divide();
+        /// <summary>
+        /// Добавляет незначащие нули и запятую до одинакового количества знаков
+        /// </summary>
+        /// <param name="binaryNumber1"></param>
+        /// <param name="binaryNumber2"></param>
+        /// <returns>Два вещественных числа одинаковой длины</returns>
         public (string x, string y) significantZeros(string binaryNumber1, string binaryNumber2)
         {
             // Проверка, содержатся ли десятичные разделители в числах
@@ -791,7 +796,23 @@ namespace Calculator
         }
         public override string Multiplication()
         {
-            throw new NotImplementedException();
+            (string x1, string y1) = significantZeros(x, y);
+            bool sign = x1[0] != '-';
+            x1 = x1.Replace("-", "");
+            int tempDot = (y1.Length - y1.IndexOf(",") - 1) + (x1.Length - x1.IndexOf(",") - 1);
+            x1 = x1.Replace(",", "");
+            y1 = y1.Replace(",", "");
+            string result = "0";
+            for (int i = x1.Length - 1; i >= 0; i--)
+            {
+                for (int j = 0; j < Convert.ToInt32(y1[i].ToString()); j++)
+                {
+                    result = Sum(result, string.Concat(x1, string.Concat(Enumerable.Repeat("0", (-1)*(i - x1.Length + 1)))));
+                }
+            }
+            result = result.Insert(result.Length - tempDot, ",");
+            result = RemoveTrailingZerosAndDot(result);
+            return sign ? result : "-" + result;
         }
         public override string Divide()
         {

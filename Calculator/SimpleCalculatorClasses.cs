@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Calculator
 {
@@ -15,6 +16,8 @@ namespace Calculator
     {
         public static decimal toDec(string s, numSystem system)
         {
+
+
             return Convert.ToInt32(s.Split(',')[0], ((int)system));
         }
         public static string fromDec(decimal number, numSystem system)
@@ -177,6 +180,22 @@ namespace Calculator
             }
 
             return number;
+        }
+        public decimal toDec(string s, numSystem system)
+        {
+            if (s.IndexOf(",") == -1)
+                s = s + ",0";
+            string s1 = s.Substring(0, s.IndexOf(","));
+            string s2 = s.Substring(s.IndexOf(",") + 1, s.Length - s.IndexOf(",")-1);
+
+            char[] temp = s1.ToCharArray();
+            Array.Reverse(temp);
+            s1 = new string(temp);
+            temp = null;
+            GC.Collect();
+            MessageBox.Show(s1);
+
+            return Convert.ToInt32(s.Split(',')[0], ((int)system));
         }
     }
 

@@ -52,6 +52,7 @@ namespace Calculator.Forms
             list = ParentForm.Controls["panelHistory"].Controls["listBox1"] as ListBox;
             keysChar = Constants.decChar;
             buttons = new List<Button>() { button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, buttonA, buttonB, buttonC, buttonD, buttonE, buttonF, button21, button22, button19, button17, button18 };
+            new BinSimpleCalc("1+1").toDec("103,01", numSystem.bin);
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

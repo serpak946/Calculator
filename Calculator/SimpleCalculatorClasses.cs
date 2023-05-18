@@ -814,9 +814,108 @@ namespace Calculator
             result = RemoveTrailingZerosAndDot(result);
             return sign ? result : "-" + result;
         }
+        public string Multiplication(string x, string y)
+        {
+            (string x1, string y1) = significantZeros(x, y);
+            bool sign = x1[0] != '-';
+            x1 = x1.Replace("-", "");
+            int tempDot = (y1.Length - y1.IndexOf(",") - 1) + (x1.Length - x1.IndexOf(",") - 1);
+            x1 = x1.Replace(",", "");
+            y1 = y1.Replace(",", "");
+            string result = "0";
+            for (int i = x1.Length - 1; i >= 0; i--)
+            {
+                for (int j = 0; j < Convert.ToInt32(y1[i].ToString()); j++)
+                {
+                    result = Sum(result, string.Concat(x1, string.Concat(Enumerable.Repeat("0", (-1) * (i - x1.Length + 1)))));
+                }
+            }
+            result = result.Insert(result.Length - tempDot, ",");
+            result = RemoveTrailingZerosAndDot(result);
+            return sign ? result : "-" + result;
+        }
         public override string Divide()
         {
-            throw new NotImplementedException();
+            string x1 = string.Empty, y1 = string.Empty;
+            string result = string.Empty;
+            bool sign = (x[0] != '-');
+            int accuracy = 20;
+
+            if (y.IndexOf(',') != -1)
+            {
+                int tempy = y.Length - y.IndexOf(",") - 1;
+                int tempx = x.IndexOf(",") == -1 ? x.Length : x.IndexOf(",");
+                y1 = y.Replace(",", "");
+                x1 = x.Replace(",", "");
+                x1 = x1 + "00000000000000000000000";
+                if (tempx + tempy != x1.Length)
+                {
+                    x1 = x1.Insert(tempx + tempy, ",");
+                }
+            }
+            else
+            {
+                y1 = y;
+                if (x.IndexOf(',') == -1)
+                {
+                    x1 = x + ",00000000000000000000000";
+                }
+                else
+                {
+                    x1 = x + "00000000000000000000000";
+                }
+            }
+
+            long tempY = Convert.ToInt64(y1);
+            long tempX = Convert.ToInt64(x1[0].ToString());
+            x1 = x1.Substring(1);
+            for (int i = 0; i < accuracy; i++)
+            {
+                if (tempX < tempY)
+                {
+                    if (x1[0] != ',')
+                    {
+                        result += '0';
+                        tempX = tempX * 10 + Convert.ToInt64(x1[0].ToString());
+                        x1 = x1.Substring(1);
+                    }
+                    else
+                    {
+                        result += "0,";
+                        tempX = tempX * 10 + Convert.ToInt64(x1[1].ToString());
+                        x1 = x1.Substring(2);
+                    }
+                }
+                else
+                {
+                    int tempq = 1;
+                    for (int j = 7; j >= 1; j--)
+                    {
+                        if (Convert.ToInt64(Multiplication(tempY.ToString(), j.ToString())) <= tempX)
+                        {
+                            result += j.ToString();
+                            tempq = j;
+                            break;
+                        }
+                    }
+                    tempX = Convert.ToInt64(Subtraction(tempX.ToString(), Multiplication(tempY.ToString(), tempq.ToString())));
+                    if (x1[0] != ',')
+                    {
+                        tempX = tempX * 10 + Convert.ToInt64(x1[0].ToString());
+                        x1 = x1.Substring(1);
+                    }
+                    else
+                    {
+                        result += ",";
+                        tempX = tempX * 10 + Convert.ToInt64(x1[1].ToString());
+                        x1 = x1.Substring(2);
+                    }
+                }
+                if (!x1.Contains("1") && !x1.Contains("2") && !x1.Contains("3") && !x1.Contains("4") && !x1.Contains("5") && !x1.Contains("6") && !x1.Contains("7") && tempX == 0) break;
+                if (x1.IndexOf(',') != -1) i--;
+            }
+            result = RemoveTrailingZerosAndDot(result);
+            return sign ? result : '-' + result;
         }
     }
 }

@@ -1000,7 +1000,7 @@ namespace Calculator
             for (int i = x1.Length - 1; i >= 0; i--)
             {
                 result = intToHex((hexToInt(x1[i]) + hexToInt(y1[i]) + temp) % 16) + result;
-                temp = ((hexToInt(x1[i]) + hexToInt(y1[i]) + temp) / 16);
+                temp = (hexToInt(x1[i]) + hexToInt(y1[i]) + temp) / 16;
             }
             result = intToHex(temp) + result;
             result = result.Insert(result.Length - n, ",");

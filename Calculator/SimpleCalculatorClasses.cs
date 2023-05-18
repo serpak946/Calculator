@@ -629,7 +629,7 @@ namespace Calculator
                 y1 = y;
                 if (x.IndexOf(',') == -1)
                 {
-                    x1 = x + ".00000000000000000000000";
+                    x1 = x + ",00000000000000000000000";
                 }
                 else
                 {
@@ -689,9 +689,7 @@ namespace Calculator
             if (s.ToCharArray().Except(Constants.octChar).Any()) throw new ArgumentException("Недопустимые символы");
             this.problem = s;
             system = numSystem.oct;
-            operationstring = MyConverter.fromString(s).operation;
-            x = MyConverter.fromString(s).x.ToString();
-            y = MyConverter.fromString(s).y.ToString();
+            (x, y, operationstring) = MyConverter.fromString(s);
         }
         public OctSimpleCalc(string x, string y)
         {
@@ -710,7 +708,7 @@ namespace Calculator
             for (int i = x1.Length - 1; i >= 0; i--)
             {
                 result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 8) + result;
-                temp = ((Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 8);
+                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 8;
             }
             result = temp + result;
             result = result.Insert(result.Length - n, ",");
@@ -807,7 +805,7 @@ namespace Calculator
             {
                 for (int j = 0; j < Convert.ToInt32(y1[i].ToString()); j++)
                 {
-                    result = Sum(result, string.Concat(x1, string.Concat(Enumerable.Repeat("0", (-1)*(i - x1.Length + 1)))));
+                    result = Sum(result, string.Concat(x1, string.Concat(Enumerable.Repeat("0", (-1) * (i - x1.Length + 1)))));
                 }
             }
             result = result.Insert(result.Length - tempDot, ",");
@@ -916,6 +914,109 @@ namespace Calculator
             }
             result = RemoveTrailingZerosAndDot(result);
             return sign ? result : '-' + result;
+        }
+    }
+    public class HexSimpleCalc : SimpCalc
+    {
+        public override string x { get; set; }
+        public override string y { get; set; }
+        public HexSimpleCalc(string s)
+        {
+            if (s.ToCharArray().Except(Constants.hexChar).Any()) throw new ArgumentException("Недопустимые символы");
+            this.problem = s;
+            system = numSystem.hex;
+            (x, y, operationstring) = MyConverter.fromString(s);
+        }
+        public HexSimpleCalc(string x, string y)
+        {
+            this.x = x;
+            this.y = y;
+            system = numSystem.hex;
+        }
+        private long hexToInt(char s)
+        {
+            switch (s)
+            {
+                case 'A':
+                    return 10; break;
+                case 'B':
+                    return 11; break;
+                case 'C':
+                    return 12; break;
+                case 'D':
+                    return 13; break;
+                case 'E':
+                    return 14; break;
+                case 'F':
+                    return 15; break;
+                default:
+                    return Convert.ToInt64(s.ToString()); break;
+            }
+        }
+        private string intToHex(long s)
+        {
+            switch (s)
+            {
+                case 10:
+                    return "A"; break;
+                case 11:
+                    return "B"; break;
+                case 12:
+                    return "C"; break;
+                case 13:
+                    return "D"; break;
+                case 14:
+                    return "E"; break;
+                case 15:
+                    return "F"; break;
+                default:
+                    return s.ToString(); break;
+            }
+        }
+        public override string Sum()
+        {
+            //if (x[0] == '-') return Subtraction(y, x.Substring(1, x.Length - 1));
+            (string x1, string y1) = significantZeros(x, y);
+            int n = x1.Length - x1.IndexOf(',') - 1;
+            x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
+            string result = string.Empty;
+            long temp = 0;
+            for (int i = x1.Length - 1; i >= 0; i--)
+            {
+                result = intToHex((hexToInt(x1[i]) + hexToInt(y1[i]) + temp) % 16) + result;
+                temp = ((hexToInt(x1[i]) + hexToInt(y1[i]) + temp) / 16);
+            }
+            result = intToHex(temp) + result;
+            result = result.Insert(result.Length - n, ",");
+            return RemoveTrailingZerosAndDot(result);
+        }
+        public string Sum(string x, string y)
+        {
+            (string x1, string y1) = significantZeros(x, y);
+            int n = x1.Length - x1.IndexOf(',') - 1;
+            x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
+            string result = string.Empty;
+            long temp = 0;
+            for (int i = x1.Length - 1; i >= 0; i--)
+            {
+                result = intToHex((hexToInt(x1[i]) + hexToInt(y1[i]) + temp) % 16) + result;
+                temp = ((hexToInt(x1[i]) + hexToInt(y1[i]) + temp) / 16);
+            }
+            result = intToHex(temp) + result;
+            result = result.Insert(result.Length - n, ",");
+            return RemoveTrailingZerosAndDot(result);
+        }
+        public override string Subtraction()
+        {
+            throw new NotImplementedException();
+        }
+        public override string Multiplication()
+        {
+            throw new NotImplementedException();
+        }
+        public override string Divide()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Calculator.Forms
                 case numSystem.dec:
                     return new DecSimpleCalc(s);
                 case numSystem.hex:
-                    return null;
+                    return new HexSimpleCalc(s); ;
                 default: return null;
             }
         }

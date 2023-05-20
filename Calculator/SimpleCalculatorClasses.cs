@@ -51,7 +51,7 @@ namespace Calculator
                 s1 = s1.Remove(0, 1);
             }
             temp = -1;
-            while (s2 != "")
+            while (s2 != "" && s2 != "0")
             {
                 int c;
                 switch (s2[0])

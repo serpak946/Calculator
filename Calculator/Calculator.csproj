@@ -54,24 +54,11 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SimpleCalculator.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SimpleCalculator.Designer.cs">
-      <DependentUpon>SimpleCalculator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="HamburgerPanel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoundButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="SimpleCalculatorClasses.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SimpleCalculator.resx">
-      <DependentUpon>SimpleCalculator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

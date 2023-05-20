@@ -6,7 +6,7 @@ namespace Calculator
 {
     public static class Constants
     {
-        public static List<char> decChar { get; } = new List<char>() { '+', '-', '*', '/', '%', '^', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', (char)Keys.Back, '.', ',', '×', '÷' };
+        public static List<char> decChar { get; } = new List<char>() { '+', '-', '*', '/', '%', '^', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', (char)Keys.Back, '.', ',', '×', '÷', };
         public static List<char> binChar { get; } = new List<char>() { '+', '-', '*', '/', '0', '1', (char)Keys.Back, '.', ',', '×', '÷' };
         public static List<char> octChar { get; } = new List<char>() { '+', '-', '*', '/', '0', '1', '2', '3', '4', '5', '6', '7', (char)Keys.Back, '.', ',', '×', '÷' };
         public static List<char> hexChar { get; } = new List<char>() { '+', '-', '*', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', (char)Keys.Back, '.', ',', '×', '÷' };
@@ -48,18 +48,18 @@ namespace Calculator
         }
         public override string ToString()
         {
-            return (problem.Length >= 29 ? problem.Substring(0, 26) + "..." : problem) + ':' + (answer.ToString().Length >= 29 ? answer.ToString().Substring(0, 26) + "..." : answer.ToString());
+            return (problem.Length >= 29 ? problem.Substring(0, 26) + "..." : problem) + ':' + (answer.ToString().Length >= 29 ? answer.ToString().Substring(0, 26) + "..." : answer.ToString()) + ':' + ((int)system);
         }
         public override bool Equals(object obj)
         {
             if (obj is History other)
-                return problem.Equals(other.problem);
+                return problem.Equals(other.problem) && system.Equals(other.system);
             else
                 return false;
         }
         public override int GetHashCode()
         {
-            return this.problem.GetHashCode();
+            return Tuple.Create(problem, system).GetHashCode();
         }
     }
 }

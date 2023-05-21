@@ -18,10 +18,6 @@ namespace Calculator
         {
             InitializeComponent();
         }
-        public void newHistory(DecSimpleCalc calc)
-        {
-            _ = new History(calc, listBox1);
-        }
 
         private void Form1_Load(object sender, EventArgs e)
         {

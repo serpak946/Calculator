@@ -16,14 +16,16 @@ namespace Calculator
         public static decimal toDec(string s, numSystem system)
         {
             if (s.IndexOf(",") == -1)
-                s = s + ",0";
+            {
+                s += ",0";
+            }
+
             string s1 = s.Substring(0, s.IndexOf(","));
             string s2 = s.Substring(s.IndexOf(",") + 1, s.Length - s.IndexOf(",") - 1);
 
             char[] tempArr = s1.ToCharArray();
             Array.Reverse(tempArr);
             s1 = new string(tempArr);
-            tempArr = null;
             decimal result = 0;
             int temp = 0;
             while (s1 != "")
@@ -46,7 +48,7 @@ namespace Calculator
                     default:
                         c = Convert.ToInt32(s1[0].ToString()); break;
                 }
-                result = result + (c * ((decimal)(Math.Pow(((int)system), temp))));
+                result += (c * ((decimal)Math.Pow((int)system, temp)));
                 temp++;
                 s1 = s1.Remove(0, 1);
             }
@@ -71,7 +73,7 @@ namespace Calculator
                     default:
                         c = Convert.ToInt32(s2[0].ToString()); break;
                 }
-                result = result + (c * ((decimal)(Math.Pow(((int)system), temp))));
+                result += (c * ((decimal)Math.Pow((int)system, temp)));
                 temp--;
                 s2 = s2.Remove(0, 1);
             }
@@ -79,12 +81,12 @@ namespace Calculator
         }
         public static string fromDec(decimal number, numSystem system)
         {
-            int x = ((int)Math.Truncate(number));
+            int x = (int)Math.Truncate(number);
             decimal x1 = number - x;
             string s = "";
             do
             {
-                decimal temp = 0 + x % ((int)system);
+                decimal temp = 0 + (x % ((int)system));
                 switch (temp)
                 {
                     case 10:
@@ -102,12 +104,12 @@ namespace Calculator
                     default:
                         s = temp + s; break;
                 }
-                x = x / ((int)system);
+                x /= ((int)system);
             } while (x > 0);
             if (x1 != 0)
             {
                 s += ",";
-                for (int i = 0; i < x1.ToString().Length + ((1 / ((int)system)) * 32); i++)
+                for (int i = 0; i < x1.ToString().Length + (1 / ((int)system) * 32); i++)
                 {
                     x1 *= (int)system;
                     switch (Math.Truncate(x1))
@@ -127,8 +129,11 @@ namespace Calculator
                         default:
                             s += Math.Truncate(x1); break;
                     }
-                    x1 = x1 - Math.Truncate(x1);
-                    if (x1 == 0) break;
+                    x1 -= Math.Truncate(x1);
+                    if (x1 == 0)
+                    {
+                        break;
+                    }
                 }
             }
             return s;
@@ -176,10 +181,7 @@ namespace Calculator
         private char Operationstring;
         public virtual char operationstring
         {
-            get
-            {
-                return this.Operationstring;
-            }
+            get => Operationstring;
             set
             {
                 switch (value)
@@ -214,10 +216,14 @@ namespace Calculator
 
             // Если число не содержит десятичного разделителя, добавляем его и ноль после
             if (!hasDecimalPoint1)
+            {
                 binaryNumber1 += ",0";
+            }
 
             if (!hasDecimalPoint2)
+            {
                 binaryNumber2 += ",0";
+            }
 
             // Разделение чисел на целую и дробную части
             string[] parts1 = binaryNumber1.Split(',');
@@ -258,7 +264,9 @@ namespace Calculator
 
             // Удаление незначащих нулей справа
             if (number.Contains(','))
+            {
                 number = number.TrimEnd('0');
+            }
 
             // Удаление точки, если она является последним символом
             if (number.EndsWith(","))
@@ -281,10 +289,7 @@ namespace Calculator
         private char Operationstring;
         public override char operationstring
         {
-            get
-            {
-                return this.Operationstring;
-            }
+            get => Operationstring;
             set
             {
                 switch (value)
@@ -305,17 +310,17 @@ namespace Calculator
         }
         public override string x
         {
-            get { return X.ToString(); }
-            set { X = Convert.ToDecimal(value); }
+            get => X.ToString();
+            set => X = Convert.ToDecimal(value);
         }
         public override string y
         {
-            get { return Y.ToString(); }
-            set { Y = Convert.ToDecimal(value); }
+            get => Y.ToString();
+            set => Y = Convert.ToDecimal(value);
         }
         public DecSimpleCalc(string s)
         {
-            this.problem = s;
+            problem = s;
             system = numSystem.dec;
             X = Convert.ToDecimal(MyConverter.fromString(s).x);
             Y = Convert.ToDecimal(MyConverter.fromString(s).y);
@@ -327,21 +332,29 @@ namespace Calculator
             this.Y = Y;
             system = numSystem.dec;
         }
-        public override string Sum() => (X + Y).ToString("G0");
-        public override string Subtraction() => (X - Y).ToString("G0");
-        public override string Multiplication() => (X * Y).ToString("G0");
+        public override string Sum()
+        {
+            return (X + Y).ToString("G0");
+        }
+
+        public override string Subtraction()
+        {
+            return (X - Y).ToString("G0");
+        }
+
+        public override string Multiplication()
+        {
+            return (X * Y).ToString("G0");
+        }
+
         public override string Divide()
         {
-            if (Y != 0)
-            {
-                return (X / Y).ToString("0.############################");
-            }
-            else
-            {
-                throw new DivideByZeroException();
-            }
+            return Y != 0 ? (X / Y).ToString("0.############################") : throw new DivideByZeroException();
         }
-        public string Pow() => Math.Pow((double)X, (double)Y).ToString("0.############################");
+        public string Pow()
+        {
+            return Math.Pow((double)X, (double)Y).ToString("0.############################");
+        }
     }
 
     public class BinSimpleCalc : SimpCalc
@@ -350,8 +363,12 @@ namespace Calculator
         public override string y { get; set; }
         public BinSimpleCalc(string s)
         {
-            if (s.ToCharArray().Except(Constants.binChar).Any()) throw new ArgumentException("Недопустимые символы");
-            this.problem = s;
+            if (s.ToCharArray().Except(Constants.binChar).Any())
+            {
+                throw new ArgumentException("Недопустимые символы");
+            }
+
+            problem = s;
             system = numSystem.bin;
             (x, y, operationstring) = MyConverter.fromString(s);
         }
@@ -363,7 +380,11 @@ namespace Calculator
         }
         public override string Sum()
         {
-            if (x[0] == '-') return Subtraction(y, x.Substring(1, x.Length - 1));
+            if (x[0] == '-')
+            {
+                return Subtraction(y, x.Substring(1, x.Length - 1));
+            }
+
             (string x1, string y1) = significantZeros(x, y);
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
@@ -372,7 +393,7 @@ namespace Calculator
             for (int i = x1.Length - 1; i >= 0; i--)
             {
                 result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 2) + result;
-                temp = ((Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 2);
+                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 2;
             }
             result = temp + result;
             result = result.Insert(result.Length - n, ",");
@@ -388,7 +409,7 @@ namespace Calculator
             for (int i = x1.Length - 1; i >= 0; i--)
             {
                 result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 2) + result;
-                temp = ((Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 2);
+                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 2;
             }
             result = temp + result;
             result = result.Insert(result.Length - n, ",");
@@ -396,13 +417,25 @@ namespace Calculator
         }
         public override string Subtraction()
         {
-            if (x[0] == '-') return "-" + Sum(x.Substring(1, x.Length - 1), y);
+            if (x[0] == '-')
+            {
+                return "-" + Sum(x.Substring(1, x.Length - 1), y);
+            }
+
             (string x1, string y1) = significantZeros(x, y);
-            if (x1 == y1) return "0";
+            if (x1 == y1)
+            {
+                return "0";
+            }
+
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
-            bool sign = (Convert.ToInt64(x1) >= Convert.ToInt64(y1));
-            if (!sign) (x1, y1) = (y1, x1);
+            bool sign = Convert.ToInt64(x1) >= Convert.ToInt64(y1);
+            if (!sign)
+            {
+                (x1, y1) = (y1, x1);
+            }
+
             string result = string.Empty;
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
@@ -428,11 +461,19 @@ namespace Calculator
         public string Subtraction(string x, string y)
         {
             (string x1, string y1) = significantZeros(x, y);
-            if (x1 == y1) return "0";
+            if (x1 == y1)
+            {
+                return "0";
+            }
+
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
-            bool sign = (Convert.ToInt64(x1) >= Convert.ToInt64(y1));
-            if (!sign) (x1, y1) = (y1, x1);
+            bool sign = Convert.ToInt64(x1) >= Convert.ToInt64(y1);
+            if (!sign)
+            {
+                (x1, y1) = (y1, x1);
+            }
+
             string result = string.Empty;
             int temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
@@ -467,7 +508,10 @@ namespace Calculator
                 (x1, y1) = significantZeros(x.Substring(1, x.Length - 1), y);
             }
             else
+            {
                 (x1, y1) = significantZeros(x, y);
+            }
+
             int xDecimalPos = x1.IndexOf(',');
             int yDecimalPos = y1.IndexOf(',');
             int n = ((x1.Length - xDecimalPos) * 2) - 2;
@@ -493,7 +537,7 @@ namespace Calculator
                 {
                     partialResult = carry + partialResult;
                 }
-                int decimalPos = (y1.Length - 1 - i) + (x1.Length - xDecimalPos - 1);
+                int decimalPos = y1.Length - 1 - i + (x1.Length - xDecimalPos - 1);
                 partialResult = partialResult.PadRight(decimalPos + partialResult.Length, '0');
                 result = Sum(result, partialResult);
             }
@@ -504,19 +548,25 @@ namespace Calculator
         }
         public override string Divide()
         {
-            if (y == "0") throw new DivideByZeroException();
-            string x1 = string.Empty, y1 = string.Empty;
+            if (y == "0")
+            {
+                throw new DivideByZeroException();
+            }
+
             string result = string.Empty;
-            bool sign = (x[0] != '-');
+            bool sign = x[0] != '-';
             int accuracy = 20;
 
+
+            string x1;
+            string y1;
             if (y.IndexOf(',') != -1)
             {
                 int tempy = y.Length - y.IndexOf(",") - 1;
                 int tempx = x.IndexOf(",") == -1 ? x.Length : x.IndexOf(",");
                 y1 = y.Replace(",", "");
                 x1 = x.Replace(",", "");
-                x1 = x1 + "00000000000000000000000";
+                x1 += "00000000000000000000000";
                 if (tempx + tempy != x1.Length)
                 {
                     x1 = x1.Insert(tempx + tempy, ",");
@@ -525,14 +575,7 @@ namespace Calculator
             else
             {
                 y1 = y;
-                if (x.IndexOf(',') == -1)
-                {
-                    x1 = x + ",00000000000000000000000";
-                }
-                else
-                {
-                    x1 = x + "00000000000000000000000";
-                }
+                x1 = x.IndexOf(',') == -1 ? x + ",00000000000000000000000" : x + "00000000000000000000000";
             }
 
             long tempY = Convert.ToInt64(y1);
@@ -545,13 +588,13 @@ namespace Calculator
                     if (x1[0] != ',')
                     {
                         result += '0';
-                        tempX = tempX * 10 + Convert.ToInt64(x1[0].ToString());
+                        tempX = (tempX * 10) + Convert.ToInt64(x1[0].ToString());
                         x1 = x1.Substring(1);
                     }
                     else
                     {
                         result += "0,";
-                        tempX = tempX * 10 + Convert.ToInt64(x1[1].ToString());
+                        tempX = (tempX * 10) + Convert.ToInt64(x1[1].ToString());
                         x1 = x1.Substring(2);
                     }
                 }
@@ -561,13 +604,13 @@ namespace Calculator
                     tempX = Convert.ToInt64(Subtraction(tempX.ToString(), tempY.ToString()));
                     if (x1[0] != ',')
                     {
-                        tempX = tempX * 10 + Convert.ToInt64(x1[0].ToString());
+                        tempX = (tempX * 10) + Convert.ToInt64(x1[0].ToString());
                         x1 = x1.Substring(1);
                     }
                     else
                     {
                         result += ",";
-                        tempX = tempX * 10 + Convert.ToInt64(x1[1].ToString());
+                        tempX = (tempX * 10) + Convert.ToInt64(x1[1].ToString());
                         x1 = x1.Substring(2);
                     }
                 }
@@ -579,9 +622,14 @@ namespace Calculator
                         break;
                     }
                     else
+                    {
                         break;
+                    }
                 }
-                if (x1.IndexOf(',') != -1) i--;
+                if (x1.IndexOf(',') != -1)
+                {
+                    i--;
+                }
             }
             result = RemoveTrailingZerosAndDot(result);
             return sign ? result : '-' + result;
@@ -594,8 +642,12 @@ namespace Calculator
         public override string y { get; set; }
         public OctSimpleCalc(string s)
         {
-            if (s.ToCharArray().Except(Constants.octChar).Any()) throw new ArgumentException("Недопустимые символы");
-            this.problem = s;
+            if (s.ToCharArray().Except(Constants.octChar).Any())
+            {
+                throw new ArgumentException("Недопустимые символы");
+            }
+
+            problem = s;
             system = numSystem.oct;
             (x, y, operationstring) = MyConverter.fromString(s);
         }
@@ -607,7 +659,11 @@ namespace Calculator
         }
         public override string Sum()
         {
-            if (x[0] == '-') return Subtraction(y, x.Substring(1, x.Length - 1));
+            if (x[0] == '-')
+            {
+                return Subtraction(y, x.Substring(1, x.Length - 1));
+            }
+
             (string x1, string y1) = significantZeros(x, y);
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
@@ -632,7 +688,7 @@ namespace Calculator
             for (int i = x1.Length - 1; i >= 0; i--)
             {
                 result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 8) + result;
-                temp = ((Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 8);
+                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 8;
             }
             result = temp + result;
             result = result.Insert(result.Length - n, ",");
@@ -641,13 +697,25 @@ namespace Calculator
 
         public override string Subtraction()
         {
-            if (x[0] == '-') return "-" + Sum(x.Substring(1, x.Length - 1), y);
+            if (x[0] == '-')
+            {
+                return "-" + Sum(x.Substring(1, x.Length - 1), y);
+            }
+
             (string x1, string y1) = significantZeros(x, y);
-            if (x1 == y1) return "0";
+            if (x1 == y1)
+            {
+                return "0";
+            }
+
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
-            bool sign = (Convert.ToInt64(x1) >= Convert.ToInt64(y1));
-            if (!sign) (x1, y1) = (y1, x1);
+            bool sign = Convert.ToInt64(x1) >= Convert.ToInt64(y1);
+            if (!sign)
+            {
+                (x1, y1) = (y1, x1);
+            }
+
             string result = string.Empty;
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
@@ -674,11 +742,19 @@ namespace Calculator
         public string Subtraction(string x, string y)
         {
             (string x1, string y1) = significantZeros(x, y);
-            if (x1 == y1) return "0";
+            if (x1 == y1)
+            {
+                return "0";
+            }
+
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
-            bool sign = (Convert.ToInt64(x1) >= Convert.ToInt64(y1));
-            if (!sign) (x1, y1) = (y1, x1);
+            bool sign = Convert.ToInt64(x1) >= Convert.ToInt64(y1);
+            if (!sign)
+            {
+                (x1, y1) = (y1, x1);
+            }
+
             string result = string.Empty;
             int temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
@@ -708,7 +784,7 @@ namespace Calculator
             (string x1, string y1) = significantZeros(x, y);
             bool sign = x1[0] != '-';
             x1 = x1.Replace("-", "");
-            int tempDot = (y1.Length - y1.IndexOf(",") - 1) + (x1.Length - x1.IndexOf(",") - 1);
+            int tempDot = y1.Length - y1.IndexOf(",") - 1 + (x1.Length - x1.IndexOf(",") - 1);
             x1 = x1.Replace(",", "");
             y1 = y1.Replace(",", "");
             string result = "0";
@@ -729,7 +805,7 @@ namespace Calculator
             (string x1, string y1) = significantZeros(x, y);
             bool sign = x1[0] != '-';
             x1 = x1.Replace("-", "");
-            int tempDot = (y1.Length - y1.IndexOf(",") - 1) + (x1.Length - x1.IndexOf(",") - 1);
+            int tempDot = y1.Length - y1.IndexOf(",") - 1 + (x1.Length - x1.IndexOf(",") - 1);
             x1 = x1.Replace(",", "");
             y1 = y1.Replace(",", "");
             string result = "0";
@@ -747,19 +823,25 @@ namespace Calculator
 
         public override string Divide()
         {
-            if (y == "0") throw new DivideByZeroException();
-            string x1 = string.Empty, y1 = string.Empty;
+            if (y == "0")
+            {
+                throw new DivideByZeroException();
+            }
+
             string result = string.Empty;
-            bool sign = (x[0] != '-');
+            bool sign = x[0] != '-';
             int accuracy = 20;
 
+
+            string x1;
+            string y1;
             if (y.IndexOf(',') != -1)
             {
                 int tempy = y.Length - y.IndexOf(",") - 1;
                 int tempx = x.IndexOf(",") == -1 ? x.Length : x.IndexOf(",");
                 y1 = y.Replace(",", "");
                 x1 = x.Replace(",", "");
-                x1 = x1 + "00000000000000000000000";
+                x1 += "00000000000000000000000";
                 if (tempx + tempy != x1.Length)
                 {
                     x1 = x1.Insert(tempx + tempy, ",");
@@ -768,14 +850,7 @@ namespace Calculator
             else
             {
                 y1 = y;
-                if (x.IndexOf(',') == -1)
-                {
-                    x1 = x + ",00000000000000000000000";
-                }
-                else
-                {
-                    x1 = x + "00000000000000000000000";
-                }
+                x1 = x.IndexOf(',') == -1 ? x + ",00000000000000000000000" : x + "00000000000000000000000";
             }
 
             long tempY = Convert.ToInt64(y1);
@@ -788,13 +863,13 @@ namespace Calculator
                     if (x1[0] != ',')
                     {
                         result += '0';
-                        tempX = tempX * 10 + Convert.ToInt64(x1[0].ToString());
+                        tempX = (tempX * 10) + Convert.ToInt64(x1[0].ToString());
                         x1 = x1.Substring(1);
                     }
                     else
                     {
                         result += "0,";
-                        tempX = tempX * 10 + Convert.ToInt64(x1[1].ToString());
+                        tempX = (tempX * 10) + Convert.ToInt64(x1[1].ToString());
                         x1 = x1.Substring(2);
                     }
                 }
@@ -813,13 +888,13 @@ namespace Calculator
                     tempX = Convert.ToInt64(Subtraction(tempX.ToString(), Multiplication(tempY.ToString(), tempq.ToString())));
                     if (x1[0] != ',')
                     {
-                        tempX = tempX * 10 + Convert.ToInt64(x1[0].ToString());
+                        tempX = (tempX * 10) + Convert.ToInt64(x1[0].ToString());
                         x1 = x1.Substring(1);
                     }
                     else
                     {
                         result += ",";
-                        tempX = tempX * 10 + Convert.ToInt64(x1[1].ToString());
+                        tempX = (tempX * 10) + Convert.ToInt64(x1[1].ToString());
                         x1 = x1.Substring(2);
                     }
                 }
@@ -831,9 +906,14 @@ namespace Calculator
                         break;
                     }
                     else
+                    {
                         break;
+                    }
                 }
-                if (x1.IndexOf(',') != -1) i--;
+                if (x1.IndexOf(',') != -1)
+                {
+                    i--;
+                }
             }
             result = RemoveTrailingZerosAndDot(result);
             return sign ? result : '-' + result;
@@ -845,8 +925,12 @@ namespace Calculator
         public override string y { get; set; }
         public HexSimpleCalc(string s)
         {
-            if (s.ToCharArray().Except(Constants.hexChar).Any()) throw new ArgumentException("Недопустимые символы");
-            this.problem = s;
+            if (s.ToCharArray().Except(Constants.hexChar).Any())
+            {
+                throw new ArgumentException("Недопустимые символы");
+            }
+
+            problem = s;
             system = numSystem.hex;
             (x, y, operationstring) = MyConverter.fromString(s);
         }
@@ -899,7 +983,11 @@ namespace Calculator
 
         public override string Sum()
         {
-            if (x[0] == '-') return Subtraction(y, x.Substring(1, x.Length - 1));
+            if (x[0] == '-')
+            {
+                return Subtraction(y, x.Substring(1, x.Length - 1));
+            }
+
             (string x1, string y1) = significantZeros(x, y);
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
@@ -908,7 +996,7 @@ namespace Calculator
             for (int i = x1.Length - 1; i >= 0; i--)
             {
                 result = longToHex((hexToLong(x1[i]) + hexToLong(y1[i]) + temp) % 16) + result;
-                temp = ((hexToLong(x1[i]) + hexToLong(y1[i]) + temp) / 16);
+                temp = (hexToLong(x1[i]) + hexToLong(y1[i]) + temp) / 16;
             }
             result = longToHex(temp) + result;
             result = result.Insert(result.Length - n, ",");
@@ -934,13 +1022,25 @@ namespace Calculator
 
         public override string Subtraction()
         {
-            if (x[0] == '-') return "-" + Sum(x.Substring(1, x.Length - 1), y);
+            if (x[0] == '-')
+            {
+                return "-" + Sum(x.Substring(1, x.Length - 1), y);
+            }
+
             (string x1, string y1) = significantZeros(x, y);
-            if (x1 == y1) return "0";
+            if (x1 == y1)
+            {
+                return "0";
+            }
+
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
-            bool sign = (Convert.ToInt64(x1) >= Convert.ToInt64(y1));
-            if (!sign) (x1, y1) = (y1, x1);
+            bool sign = Convert.ToInt64(x1) >= Convert.ToInt64(y1);
+            if (!sign)
+            {
+                (x1, y1) = (y1, x1);
+            }
+
             string result = string.Empty;
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
@@ -967,11 +1067,19 @@ namespace Calculator
         public string Subtraction(string x, string y)
         {
             (string x1, string y1) = significantZeros(x, y);
-            if (x1 == y1) return "0";
+            if (x1 == y1)
+            {
+                return "0";
+            }
+
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
-            bool sign = (Convert.ToInt64(x1, 16) >= Convert.ToInt64(y1, 16));
-            if (!sign) (x1, y1) = (y1, x1);
+            bool sign = Convert.ToInt64(x1, 16) >= Convert.ToInt64(y1, 16);
+            if (!sign)
+            {
+                (x1, y1) = (y1, x1);
+            }
+
             string result = string.Empty;
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
@@ -1001,7 +1109,7 @@ namespace Calculator
             (string x1, string y1) = significantZeros(x, y);
             bool sign = x1[0] != '-';
             x1 = x1.Replace("-", "");
-            int tempDot = (y1.Length - y1.IndexOf(",") - 1) + (x1.Length - x1.IndexOf(",") - 1);
+            int tempDot = y1.Length - y1.IndexOf(",") - 1 + (x1.Length - x1.IndexOf(",") - 1);
             x1 = x1.Replace(",", "");
             y1 = y1.Replace(",", "");
             string result = "0";
@@ -1022,7 +1130,7 @@ namespace Calculator
             (string x1, string y1) = significantZeros(x, y);
             bool sign = x1[0] != '-';
             x1 = x1.Replace("-", "");
-            int tempDot = (y1.Length - y1.IndexOf(",") - 1) + (x1.Length - x1.IndexOf(",") - 1);
+            int tempDot = y1.Length - y1.IndexOf(",") - 1 + (x1.Length - x1.IndexOf(",") - 1);
             x1 = x1.Replace(",", "");
             y1 = y1.Replace(",", "");
             string result = "0";
@@ -1040,19 +1148,25 @@ namespace Calculator
 
         public override string Divide()
         {
-            if (y == "0") throw new DivideByZeroException();
-            string x1 = string.Empty, y1 = string.Empty;
+            if (y == "0")
+            {
+                throw new DivideByZeroException();
+            }
+
             string result = string.Empty;
-            bool sign = (x[0] != '-');
+            bool sign = x[0] != '-';
             int accuracy = 20;
 
+
+            string x1;
+            string y1;
             if (y.IndexOf(',') != -1)
             {
                 int tempy = y.Length - y.IndexOf(",") - 1;
                 int tempx = x.IndexOf(",") == -1 ? x.Length : x.IndexOf(",");
                 y1 = y.Replace(",", "");
                 x1 = x.Replace(",", "");
-                x1 = x1 + "00000000000000000000000";
+                x1 += "00000000000000000000000";
                 if (tempx + tempy != x1.Length)
                 {
                     x1 = x1.Insert(tempx + tempy, ",");
@@ -1061,14 +1175,7 @@ namespace Calculator
             else
             {
                 y1 = y;
-                if (x.IndexOf(',') == -1)
-                {
-                    x1 = x + ",00000000000000000000000";
-                }
-                else
-                {
-                    x1 = x + "00000000000000000000000";
-                }
+                x1 = x.IndexOf(',') == -1 ? x + ",00000000000000000000000" : x + "00000000000000000000000";
             }
 
             string tempY = y1;
@@ -1104,7 +1211,7 @@ namespace Calculator
                         }
                     }
                     tempX = Subtraction(tempX.ToString(), Multiplication(tempY.ToString(), longToHex(tempq)));
-                    
+
                     if (x1[0] != ',')
                     {
                         tempX += x1[0];
@@ -1125,9 +1232,14 @@ namespace Calculator
                         break;
                     }
                     else
+                    {
                         break;
+                    }
                 }
-                if (x1.IndexOf(',') != -1) i--;
+                if (x1.IndexOf(',') != -1)
+                {
+                    i--;
+                }
             }
             result = RemoveTrailingZerosAndDot(result);
             return sign ? result : '-' + result;

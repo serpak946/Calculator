@@ -48,7 +48,7 @@ namespace Calculator
                     default:
                         c = Convert.ToInt32(s1[0].ToString()); break;
                 }
-                result += (c * ((decimal)Math.Pow((int)system, temp)));
+                result += c * ((decimal)Math.Pow((int)system, temp));
                 temp++;
                 s1 = s1.Remove(0, 1);
             }
@@ -73,7 +73,7 @@ namespace Calculator
                     default:
                         c = Convert.ToInt32(s2[0].ToString()); break;
                 }
-                result += (c * ((decimal)Math.Pow((int)system, temp)));
+                result += c * ((decimal)Math.Pow((int)system, temp));
                 temp--;
                 s2 = s2.Remove(0, 1);
             }
@@ -104,7 +104,7 @@ namespace Calculator
                     default:
                         s = temp + s; break;
                 }
-                x /= ((int)system);
+                x /= (int)system;
             } while (x > 0);
             if (x1 != 0)
             {
@@ -513,7 +513,7 @@ namespace Calculator
             }
 
             int xDecimalPos = x1.IndexOf(',');
-            int yDecimalPos = y1.IndexOf(',');
+            _ = y1.IndexOf(',');
             int n = ((x1.Length - xDecimalPos) * 2) - 2;
             x1 = x1.Replace(",", "");
             y1 = y1.Replace(",", "");

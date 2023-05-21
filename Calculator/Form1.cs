@@ -9,10 +9,10 @@ namespace Calculator
 {
     public partial class Калькулятор : Form
     {
-        ListBox list;
-        List<char> keysChar;
-        List<Button> buttons;
-        numSystem system = numSystem.dec;
+        private ListBox list;
+        private List<char> keysChar;
+        private List<Button> buttons;
+        private numSystem system = numSystem.dec;
 
         public Калькулятор()
         {
@@ -20,12 +20,12 @@ namespace Calculator
         }
         public void newHistory(DecSimpleCalc calc)
         {
-            new History(calc, listBox1);
+            _ = new History(calc, listBox1);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
+            MaximizedBounds = Screen.FromHandle(Handle).WorkingArea;
             MyFont.ChangeFontOnForm(this);
             textBox1.Font = new Font(MyFont.LoadFont(Resources.Digital7Italic_BW658), textBox1.Font.Size);
             textBox1.ForeColor = ColorTranslator.FromHtml("#F7FFF7");
@@ -33,12 +33,12 @@ namespace Calculator
             keysChar = Constants.decChar;
             buttons = new List<Button>() { button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, buttonA, buttonB, buttonC, buttonD, buttonE, buttonF, button21, button22, button19, button17, button18 };
             textBox1.DeselectAll();
-            buttonEqual.Focus();
+            _ = buttonEqual.Focus();
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void buttonMaximize_Click(object sender, EventArgs e)
@@ -92,22 +92,23 @@ namespace Calculator
             if (listBox1.SelectedIndex != -1)
             {
                 if (textBox1.Text != string.Empty && Constants.decimalOperations.Contains(textBox1.Text[textBox1.Text.Length - 1]))
+                {
                     textBox1.Text += MyConverter.fromDec(MyConverter.toDec(item.answer, item.system), system);
+                }
                 else
+                {
                     textBox1.Text = MyConverter.fromDec(MyConverter.toDec(item.answer, item.system), system);
+                }
+
                 listBox1.ClearSelected();
             }
-            buttonEqual.Focus();
+            _ = buttonEqual.Focus();
         }
 
         public int numOfOp(string s)
         {
             int n = s.Count(a => Constants.allOperations.Contains(a));
-            if (s[0] == '-')
-            {
-                return n - 1;
-            }
-            else return n;
+            return s[0] == '-' ? n - 1 : n;
         }
 
         public SimpCalc chooseClass(string s)
@@ -130,7 +131,11 @@ namespace Calculator
         {
             if (textBox1.Text != string.Empty)
             {
-                if (textBox1.Text[textBox1.Text.Length - 1] == '.') textBox1.Text = textBox1.Text.Substring(0, textBox1.Text.Length - 1) + ',';
+                if (textBox1.Text[textBox1.Text.Length - 1] == '.')
+                {
+                    textBox1.Text = textBox1.Text.Substring(0, textBox1.Text.Length - 1) + ',';
+                }
+
                 if (numOfOp(textBox1.Text) == 2)
                 {
                     try
@@ -138,7 +143,7 @@ namespace Calculator
                         char t = textBox1.Text[textBox1.TextLength - 1];
                         SimpCalc calc = chooseClass(textBox1.Text.Substring(0, textBox1.Text.Length - 1));
                         textBox1.Text = calc.operation().ToString() + t;
-                        new History(calc, list);
+                        _ = new History(calc, list);
                     }
                     catch (FormatException)
                     {
@@ -155,7 +160,7 @@ namespace Calculator
                 }
             }
             textBox1.DeselectAll();
-            buttonEqual.Focus();
+            _ = buttonEqual.Focus();
         }
 
         public void buttonEqual_Click(object sender, EventArgs e)
@@ -171,31 +176,34 @@ namespace Calculator
                 else
                 {
                     SimpCalc temp = chooseClass((list.Items[0] as IHistory).problem);
-                    textBox1.Text += (temp.operationstring.ToString() + temp.y.ToString());
+                    textBox1.Text += temp.operationstring.ToString() + temp.y.ToString();
                     buttonEqual_Click(sender, e);
                 }
             }
-            catch (ArgumentOutOfRangeException) { MessageBox.Show("Не пример"); }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (ArgumentOutOfRangeException) { _ = MessageBox.Show("Не пример"); }
+            catch (Exception ex) { _ = MessageBox.Show(ex.Message); }
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
             textBox1.Text = string.Empty;
-            buttonEqual.Focus();
+            _ = buttonEqual.Focus();
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
             if (textBox1.Text.Length > 0)
+            {
                 textBox1.Text = textBox1.Text.Substring(0, textBox1.Text.Length - 1);
-            buttonEqual.Focus();
+            }
+
+            _ = buttonEqual.Focus();
         }
 
         private void buttonNum_Click(object sender, EventArgs e)
         {
             textBox1.Text += (sender as Button).Text;
-            buttonEqual.Focus();
+            _ = buttonEqual.Focus();
         }
 
         private void button22_Click(object sender, EventArgs e)
@@ -210,16 +218,20 @@ namespace Calculator
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
                 char op = textBox1.Text[n];
                 if (op == '×' || op == '÷')
+                {
                     textBox1.Text += (Convert.ToDecimal(s) / 100).ToString("0.############################");
+                }
                 else
+                {
                     textBox1.Text += (Convert.ToDecimal(s) * Convert.ToDecimal(s1) / 100).ToString("0.############################");
+                }
             }
             catch (InvalidOperationException)
             {
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
                 textBox1.Text = (Convert.ToDecimal(s) / 100).ToString("0.############################");
             }
-            buttonEqual.Focus();
+            _ = buttonEqual.Focus();
         }
 
         private void button21_Click(object sender, EventArgs e)
@@ -232,28 +244,28 @@ namespace Calculator
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
                 textBox1.Text += Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################");
-                new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
+                _ = new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
             }
             catch (InvalidOperationException)
             {
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
                 textBox1.Text = Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################");
-                new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
+                _ = new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
             }
-            buttonEqual.Focus();
+            _ = buttonEqual.Focus();
         }
 
         private void button19_Click(object sender, EventArgs e)
         {
             textBox1.Text = "1÷" + textBox1.Text;
             buttonEqual_Click(sender, e);
-            buttonEqual.Focus();
+            _ = buttonEqual.Focus();
         }
 
         private void button18_Click(object sender, EventArgs e)
         {
             textBox1.Text += '^';
-            buttonEqual.Focus();
+            _ = buttonEqual.Focus();
         }
 
         private void button17_Click(object sender, EventArgs e)
@@ -265,16 +277,16 @@ namespace Calculator
                 n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => Constants.allOperations.Contains(a)));
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
-                textBox1.Text += (chooseClass(s + "^2")).operation();
-                new History(chooseClass(s + "^2"), list);
+                textBox1.Text += chooseClass(s + "^2").operation();
+                _ = new History(chooseClass(s + "^2"), list);
             }
             catch (InvalidOperationException)
             {
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
-                textBox1.Text = (chooseClass(s + "^2")).operation();
-                new History(chooseClass(s + "^2"), list);
+                textBox1.Text = chooseClass(s + "^2").operation();
+                _ = new History(chooseClass(s + "^2"), list);
             }
-            buttonEqual.Focus();
+            _ = buttonEqual.Focus();
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -287,14 +299,9 @@ namespace Calculator
                 button1.Enabled = true;
                 if (textBox1.Text != string.Empty)
                 {
-                    if (MyConverter.fromString(textBox1.Text).operation != '!')
-                    {
-                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.bin) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.bin);
-                    }
-                    else
-                    {
-                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.bin);
-                    }
+                    textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
+                        ? MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.bin) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.bin)
+                        : MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.bin);
                 }
                 system = numSystem.bin;
             }
@@ -316,14 +323,9 @@ namespace Calculator
                 button7.Enabled = true;
                 if (textBox1.Text != string.Empty)
                 {
-                    if (MyConverter.fromString(textBox1.Text).operation != '!')
-                    {
-                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.oct) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.oct);
-                    }
-                    else
-                    {
-                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.oct);
-                    }
+                    textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
+                        ? MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.oct) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.oct)
+                        : MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.oct);
                 }
                 system = numSystem.oct;
             }
@@ -352,14 +354,9 @@ namespace Calculator
                 button18.Enabled = true;
                 if (textBox1.Text != string.Empty)
                 {
-                    if (MyConverter.fromString(textBox1.Text).operation != '!')
-                    {
-                        textBox1.Text = MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system).ToString() + MyConverter.fromString(textBox1.Text).operation + MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system);
-                    }
-                    else
-                    {
-                        textBox1.Text = MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system).ToString();
-                    }
+                    textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
+                        ? MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system).ToString() + MyConverter.fromString(textBox1.Text).operation + MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system)
+                        : MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system).ToString();
                 }
                 system = numSystem.dec;
             }
@@ -378,14 +375,9 @@ namespace Calculator
                 button18.Enabled = false;
                 if (textBox1.Text != string.Empty)
                 {
-                    if (MyConverter.fromString(textBox1.Text).operation != '!')
-                    {
-                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.hex) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.hex);
-                    }
-                    else
-                    {
-                        textBox1.Text = MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.hex);
-                    }
+                    textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
+                        ? MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.hex) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.hex)
+                        : MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.hex);
                 }
                 system = numSystem.hex;
             }
@@ -395,7 +387,7 @@ namespace Calculator
             textBox1.SelectAll();
             textBox1.Copy();
             textBox1.DeselectAll();
-            buttonEqual.Focus();
+            _ = buttonEqual.Focus();
         }
 
 
@@ -422,24 +414,39 @@ namespace Calculator
             {
                 case WM_NCHITTEST:
                     Point vPoint = new Point((int)m.LParam & 0xFFFF,
-                        (int)m.LParam >> 16 & 0xFFFF);
+                        ((int)m.LParam >> 16) & 0xFFFF);
                     vPoint = PointToClient(vPoint);
                     if (vPoint.X <= pxl)
+                    {
                         if (vPoint.Y <= pxl)
+                        {
                             m.Result = (IntPtr)HTTOPLEFT;
-                        else if (vPoint.Y >= ClientSize.Height - pxl)
-                            m.Result = (IntPtr)HTBOTTOMLEFT;
-                        else m.Result = (IntPtr)HTLEFT;
+                        }
+                        else
+                        {
+                            m.Result = vPoint.Y >= ClientSize.Height - pxl ? (IntPtr)HTBOTTOMLEFT : (IntPtr)HTLEFT;
+                        }
+                    }
                     else if (vPoint.X >= ClientSize.Width - pxl)
+                    {
                         if (vPoint.Y <= 5)
+                        {
                             m.Result = (IntPtr)HTTOPRIGHT;
-                        else if (vPoint.Y >= ClientSize.Height - pxl)
-                            m.Result = (IntPtr)HTBOTTOMRIGHT;
-                        else m.Result = (IntPtr)HTRIGHT;
+                        }
+                        else
+                        {
+                            m.Result = vPoint.Y >= ClientSize.Height - pxl ? (IntPtr)HTBOTTOMRIGHT : (IntPtr)HTRIGHT;
+                        }
+                    }
                     else if (vPoint.Y <= pxl)
+                    {
                         m.Result = (IntPtr)HTTOP;
+                    }
                     else if (vPoint.Y >= ClientSize.Height - pxl)
+                    {
                         m.Result = (IntPtr)HTBOTTOM;
+                    }
+
                     break;
             }
         }
@@ -455,13 +462,17 @@ namespace Calculator
                 string itemText = ((ListBox)sender).Items[e.Index].ToString();
 
                 // Создание объекта StringFormat
-                StringFormat sf = new StringFormat();
-                sf.Alignment = StringAlignment.Center;
-                sf.LineAlignment = StringAlignment.Center;
+                StringFormat sf = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center
+                };
 
-                StringFormat sf1 = new StringFormat();
-                sf1.Alignment = StringAlignment.Far;
-                sf1.LineAlignment = StringAlignment.Center;
+                StringFormat sf1 = new StringFormat
+                {
+                    Alignment = StringAlignment.Far,
+                    LineAlignment = StringAlignment.Center
+                };
 
                 // Создание объекта Brush для темного цвета
                 Brush darkBrush = new SolidBrush(ColorTranslator.FromHtml("#919591"));

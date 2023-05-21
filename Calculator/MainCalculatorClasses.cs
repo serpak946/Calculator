@@ -14,7 +14,7 @@ namespace Calculator
         public static List<char> decimalOperations { get; } = new List<char>() { '+', '-', '*', '/', '^', '÷', '×' };
     }
 
-    interface IHistory
+    internal interface IHistory
     {
         string problem { get; set; }
         string answer { get; set; }
@@ -31,7 +31,7 @@ namespace Calculator
         {
             this.problem = problem;
             this.answer = answer;
-            this.system = system;
+            system = system;
             if (!list.Items.Contains(this))
             {
                 list.Items.Insert(0, this);
@@ -39,9 +39,9 @@ namespace Calculator
         }
         public History(ISimpleCalc simpleCalc, ListBox list)
         {
-            this.problem = simpleCalc.problem;
-            this.answer = simpleCalc.operation();
-            this.system = simpleCalc.system;
+            problem = simpleCalc.problem;
+            answer = simpleCalc.operation();
+            system = simpleCalc.system;
             if (!list.Items.Contains(this))
             {
                 list.Items.Insert(0, this);
@@ -53,10 +53,7 @@ namespace Calculator
         }
         public override bool Equals(object obj)
         {
-            if (obj is History other)
-                return problem.Equals(other.problem) && system.Equals(other.system);
-            else
-                return false;
+            return obj is History other && problem.Equals(other.problem) && system.Equals(other.system);
         }
         public override int GetHashCode()
         {

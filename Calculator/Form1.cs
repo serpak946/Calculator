@@ -13,6 +13,7 @@ namespace Calculator
         List<char> keysChar;
         List<Button> buttons;
         numSystem system = numSystem.dec;
+
         public Калькулятор()
         {
             InitializeComponent();
@@ -31,7 +32,10 @@ namespace Calculator
             list = listBox1;
             keysChar = Constants.decChar;
             buttons = new List<Button>() { button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, buttonA, buttonB, buttonC, buttonD, buttonE, buttonF, button21, button22, button19, button17, button18 };
+            textBox1.DeselectAll();
+            buttonEqual.Focus();
         }
+
         private void buttonClose_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -96,22 +100,6 @@ namespace Calculator
             buttonEqual.Focus();
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public int numOfOp(string s)
         {
             int n = s.Count(a => Constants.allOperations.Contains(a));
@@ -120,8 +108,8 @@ namespace Calculator
                 return n - 1;
             }
             else return n;
-
         }
+
         public SimpCalc chooseClass(string s)
         {
             switch (system)
@@ -133,7 +121,7 @@ namespace Calculator
                 case numSystem.dec:
                     return new DecSimpleCalc(s);
                 case numSystem.hex:
-                    return new HexSimpleCalc(s); ;
+                    return new HexSimpleCalc(s);
                 default: return null;
             }
         }
@@ -145,12 +133,29 @@ namespace Calculator
                 if (textBox1.Text[textBox1.Text.Length - 1] == '.') textBox1.Text = textBox1.Text.Substring(0, textBox1.Text.Length - 1) + ',';
                 if (numOfOp(textBox1.Text) == 2)
                 {
-                    char t = textBox1.Text[textBox1.TextLength - 1];
-                    SimpCalc calc = chooseClass(textBox1.Text.Substring(0, textBox1.Text.Length - 1));
-                    textBox1.Text = calc.operation().ToString() + t;
-                    new History(calc, list);
+                    try
+                    {
+                        char t = textBox1.Text[textBox1.TextLength - 1];
+                        SimpCalc calc = chooseClass(textBox1.Text.Substring(0, textBox1.Text.Length - 1));
+                        textBox1.Text = calc.operation().ToString() + t;
+                        new History(calc, list);
+                    }
+                    catch (FormatException)
+                    {
+                        textBox1.Text = textBox1.Text.Remove(textBox1.Text.Length - 2, 1);
+                    }
+                }
+                if (textBox1.Text.StartsWith("+") || textBox1.Text.StartsWith("^") || textBox1.Text.StartsWith("÷") || textBox1.Text.StartsWith("×"))
+                {
+                    textBox1.Text = textBox1.Text.Substring(1);
+                }
+                if (textBox1.Text.StartsWith("-+") || textBox1.Text.StartsWith("-^") || textBox1.Text.StartsWith("-÷") || textBox1.Text.StartsWith("-×"))
+                {
+                    textBox1.Text = textBox1.Text.Substring(2);
                 }
             }
+            textBox1.DeselectAll();
+            buttonEqual.Focus();
         }
 
         public void buttonEqual_Click(object sender, EventArgs e)
@@ -385,24 +390,13 @@ namespace Calculator
                 system = numSystem.hex;
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        private void textBox1_Click(object sender, EventArgs e)
+        {
+            textBox1.SelectAll();
+            textBox1.Copy();
+            textBox1.DeselectAll();
+            buttonEqual.Focus();
+        }
 
 
         private void panelControl_MouseDown(object sender, MouseEventArgs e)

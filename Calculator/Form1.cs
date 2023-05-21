@@ -29,7 +29,7 @@ namespace Calculator
             keysChar = Constants.decChar;
             buttons = new List<Button>() { button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, buttonA, buttonB, buttonC, buttonD, buttonE, buttonF, button21, button22, button19, button17, button18 };
             textBox1.DeselectAll();
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
@@ -98,7 +98,7 @@ namespace Calculator
 
                 listBox1.ClearSelected();
             }
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
         public int numOfOp(string s)
@@ -139,7 +139,7 @@ namespace Calculator
                         char t = textBox1.Text[textBox1.TextLength - 1];
                         SimpCalc calc = chooseClass(textBox1.Text.Substring(0, textBox1.Text.Length - 1));
                         textBox1.Text = calc.operation().ToString() + t;
-                        _ = new History(calc, list);
+                        new History(calc, list);
                     }
                     catch (FormatException)
                     {
@@ -156,7 +156,7 @@ namespace Calculator
                 }
             }
             textBox1.DeselectAll();
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
         public void buttonEqual_Click(object sender, EventArgs e)
@@ -176,14 +176,14 @@ namespace Calculator
                     buttonEqual_Click(sender, e);
                 }
             }
-            catch (ArgumentOutOfRangeException) { _ = MessageBox.Show("Не пример"); }
-            catch (Exception ex) { _ = MessageBox.Show(ex.Message); }
+            catch (ArgumentOutOfRangeException) { MessageBox.Show("Не пример"); }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
             textBox1.Text = string.Empty;
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
@@ -193,13 +193,13 @@ namespace Calculator
                 textBox1.Text = textBox1.Text.Substring(0, textBox1.Text.Length - 1);
             }
 
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
         private void buttonNum_Click(object sender, EventArgs e)
         {
             textBox1.Text += (sender as Button).Text;
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
         private void button22_Click(object sender, EventArgs e)
@@ -227,7 +227,7 @@ namespace Calculator
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
                 textBox1.Text = (Convert.ToDecimal(s) / 100).ToString("0.############################");
             }
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
         private void button21_Click(object sender, EventArgs e)
@@ -240,28 +240,28 @@ namespace Calculator
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
                 textBox1.Text += Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################");
-                _ = new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
+                new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
             }
             catch (InvalidOperationException)
             {
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
                 textBox1.Text = Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################");
-                _ = new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
+                new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
             }
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
         private void button19_Click(object sender, EventArgs e)
         {
             textBox1.Text = "1÷" + textBox1.Text;
             buttonEqual_Click(sender, e);
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
         private void button18_Click(object sender, EventArgs e)
         {
             textBox1.Text += '^';
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
         private void button17_Click(object sender, EventArgs e)
@@ -274,15 +274,15 @@ namespace Calculator
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
                 textBox1.Text += chooseClass(s + "^2").operation();
-                _ = new History(chooseClass(s + "^2"), list);
+                new History(chooseClass(s + "^2"), list);
             }
             catch (InvalidOperationException)
             {
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
                 textBox1.Text = chooseClass(s + "^2").operation();
-                _ = new History(chooseClass(s + "^2"), list);
+                new History(chooseClass(s + "^2"), list);
             }
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -383,7 +383,7 @@ namespace Calculator
             textBox1.SelectAll();
             textBox1.Copy();
             textBox1.DeselectAll();
-            _ = buttonEqual.Focus();
+            buttonEqual.Focus();
         }
 
 

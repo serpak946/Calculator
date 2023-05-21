@@ -206,11 +206,13 @@ namespace Calculator
         {
             int n;
             string s;
+            if (textBox1.Text == string.Empty || textBox1.Text == "-") { MessageBox.Show("Введите пример"); return; }
             try
             {
                 n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => Constants.allOperations.Contains(a)));
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 string s1 = textBox1.Text.Substring(0, n);
+                if (s1 == string.Empty) throw new InvalidOperationException();
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
                 char op = textBox1.Text[n];
                 if (op == '×' || op == '÷')
@@ -219,7 +221,8 @@ namespace Calculator
                 }
                 else
                 {
-                    textBox1.Text += (Convert.ToDecimal(s) * Convert.ToDecimal(s1) / 100).ToString("0.############################");
+                    string res = (Convert.ToDecimal(s) * Convert.ToDecimal(s1) / 100).ToString("0.############################");
+                    textBox1.Text += res[0] == '-' ? res.Substring(1) : res;
                 }
             }
             catch (InvalidOperationException)
@@ -234,13 +237,22 @@ namespace Calculator
         {
             int n;
             string s;
+            if (textBox1.Text == string.Empty || textBox1.Text == "-")
+            { MessageBox.Show("Введите пример"); return; }
             try
             {
                 n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => Constants.allOperations.Contains(a)));
-                s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
-                textBox1.Text = textBox1.Text.Substring(0, n + 1);
-                textBox1.Text += Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################");
-                new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
+                if (n == 0)
+                {
+                    MessageBox.Show("Корень от отрицательного числа"); return;
+                }
+                else
+                {
+                    s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
+                    textBox1.Text = textBox1.Text.Substring(0, n + 1);
+                    textBox1.Text += Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################");
+                    new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
+                }
             }
             catch (InvalidOperationException)
             {
@@ -253,7 +265,10 @@ namespace Calculator
 
         private void button19_Click(object sender, EventArgs e)
         {
-            textBox1.Text = "1÷" + textBox1.Text;
+            if (textBox1.Text[0] != '-')
+                textBox1.Text = "1÷" + textBox1.Text;
+            else
+                textBox1.Text = "-1÷" + textBox1.Text;
             buttonEqual_Click(sender, e);
             buttonEqual.Focus();
         }
@@ -266,21 +281,11 @@ namespace Calculator
 
         private void button17_Click(object sender, EventArgs e)
         {
-            int n;
-            string s;
-            try
+            if (textBox1.Text != string.Empty && textBox1.Text != "-")
             {
-                n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => Constants.allOperations.Contains(a)));
-                s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
-                textBox1.Text = textBox1.Text.Substring(0, n + 1);
-                textBox1.Text += chooseClass(s + "^2").operation();
-                new History(chooseClass(s + "^2"), list);
-            }
-            catch (InvalidOperationException)
-            {
-                s = textBox1.Text.Substring(0, textBox1.TextLength);
-                textBox1.Text = chooseClass(s + "^2").operation();
-                new History(chooseClass(s + "^2"), list);
+                textBox1.Text += '^';
+                textBox1.Text += '2';
+                buttonEqual_Click(sender, e);
             }
             buttonEqual.Focus();
         }

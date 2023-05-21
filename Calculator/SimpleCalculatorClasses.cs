@@ -15,6 +15,8 @@ namespace Calculator
     {
         public static decimal toDec(string s, numSystem system)
         {
+            bool sign = !s.StartsWith("-");
+            if (!sign) s = s.Substring(1);
             if (s.IndexOf(",") == -1)
             {
                 s += ",0";
@@ -77,10 +79,12 @@ namespace Calculator
                 temp--;
                 s2 = s2.Remove(0, 1);
             }
-            return result;
+            return sign ? result : result*(-1);
         }
         public static string fromDec(decimal number, numSystem system)
         {
+            bool sign = number >= 0;
+            if (!sign) number *= -1;
             int x = (int)Math.Truncate(number);
             decimal x1 = number - x;
             string s = "";
@@ -109,7 +113,7 @@ namespace Calculator
             if (x1 != 0)
             {
                 s += ",";
-                for (int i = 0; i < x1.ToString().Length + (1 / ((int)system) * 32); i++)
+                for (int i = 0; i < x1.ToString().Length + (32 / ((int)system)); i++)
                 {
                     x1 *= (int)system;
                     switch (Math.Truncate(x1))
@@ -136,7 +140,7 @@ namespace Calculator
                     }
                 }
             }
-            return s;
+            return sign ? s : '-' + s;
         }
         /// <summary>
         /// Метод, который переводит текст в два числа и операцию, если одно число, то в качестве операции возвращает '!'
@@ -371,6 +375,7 @@ namespace Calculator
             problem = s;
             system = numSystem.bin;
             (x, y, operationstring) = MyConverter.fromString(s);
+            if (y == string.Empty) throw new FormatException();
         }
         public BinSimpleCalc(string x, string y)
         {
@@ -500,6 +505,7 @@ namespace Calculator
         }
         public override string Multiplication()
         {
+            if (x == "0" || y == "0") return "0";
             bool sign = true;
             string x1, y1;
             if (x[0] == '-')
@@ -513,7 +519,7 @@ namespace Calculator
             }
 
             int xDecimalPos = x1.IndexOf(',');
-            _ = y1.IndexOf(',');
+            int yDecimalPos = y1.IndexOf(',');
             int n = ((x1.Length - xDecimalPos) * 2) - 2;
             x1 = x1.Replace(",", "");
             y1 = y1.Replace(",", "");
@@ -541,8 +547,13 @@ namespace Calculator
                 partialResult = partialResult.PadRight(decimalPos + partialResult.Length, '0');
                 result = Sum(result, partialResult);
             }
-
-            result = result.Insert(result.Length - n, ",");
+            if (result.Length - n < 0)
+            {
+                result = string.Concat(Enumerable.Repeat("0", n)) + result;
+                result = result.Insert(1, ",");
+            }
+            else
+                result = result.Insert(result.Length - n, ",");
             result = RemoveTrailingZerosAndDot(result);
             return !sign ? "-" + result : result;
         }
@@ -650,6 +661,7 @@ namespace Calculator
             problem = s;
             system = numSystem.oct;
             (x, y, operationstring) = MyConverter.fromString(s);
+            if (y == string.Empty) throw new FormatException();
         }
         public OctSimpleCalc(string x, string y)
         {
@@ -781,9 +793,10 @@ namespace Calculator
         }
         public override string Multiplication()
         {
+            if (x == "0" || y == "0") return "0";
+            bool sign = x[0] != '-';
+            x = x.Replace("-", "");
             (string x1, string y1) = significantZeros(x, y);
-            bool sign = x1[0] != '-';
-            x1 = x1.Replace("-", "");
             int tempDot = y1.Length - y1.IndexOf(",") - 1 + (x1.Length - x1.IndexOf(",") - 1);
             x1 = x1.Replace(",", "");
             y1 = y1.Replace(",", "");
@@ -795,16 +808,23 @@ namespace Calculator
                     result = Sum(result, string.Concat(x1, string.Concat(Enumerable.Repeat("0", (-1) * (i - x1.Length + 1)))));
                 }
             }
-            result = result.Insert(result.Length - tempDot, ",");
+            if (result.Length - tempDot < 0)
+            {
+                result = string.Concat(Enumerable.Repeat("0", tempDot)) + result;
+                result = result.Insert(1, ",");
+            }
+            else
+                result = result.Insert(result.Length - tempDot, ",");
             result = RemoveTrailingZerosAndDot(result);
             return sign ? result : "-" + result;
         }
 
         public string Multiplication(string x, string y)
         {
+            if (x == "0" || y == "0") return "0";
+            bool sign = x[0] != '-';
+            x = x.Replace("-", "");
             (string x1, string y1) = significantZeros(x, y);
-            bool sign = x1[0] != '-';
-            x1 = x1.Replace("-", "");
             int tempDot = y1.Length - y1.IndexOf(",") - 1 + (x1.Length - x1.IndexOf(",") - 1);
             x1 = x1.Replace(",", "");
             y1 = y1.Replace(",", "");
@@ -933,6 +953,7 @@ namespace Calculator
             problem = s;
             system = numSystem.hex;
             (x, y, operationstring) = MyConverter.fromString(s);
+            if (y == string.Empty) throw new FormatException();
         }
         public HexSimpleCalc(string x, string y)
         {
@@ -1106,9 +1127,10 @@ namespace Calculator
 
         public override string Multiplication()
         {
+            if (x == "0" || y == "0") return "0";
+            bool sign = x[0] != '-';
+            x = x.Replace("-", "");
             (string x1, string y1) = significantZeros(x, y);
-            bool sign = x1[0] != '-';
-            x1 = x1.Replace("-", "");
             int tempDot = y1.Length - y1.IndexOf(",") - 1 + (x1.Length - x1.IndexOf(",") - 1);
             x1 = x1.Replace(",", "");
             y1 = y1.Replace(",", "");
@@ -1120,16 +1142,23 @@ namespace Calculator
                     result = Sum(result, string.Concat(x1, string.Concat(Enumerable.Repeat("0", (-1) * (i - x1.Length + 1)))));
                 }
             }
-            result = result.Insert(result.Length - tempDot, ",");
+            if (result.Length - tempDot < 0)
+            {
+                result = string.Concat(Enumerable.Repeat("0", tempDot)) + result;
+                result = result.Insert(1, ",");
+            }
+            else
+                result = result.Insert(result.Length - tempDot, ",");
             result = RemoveTrailingZerosAndDot(result);
             return sign ? result : "-" + result;
         }
 
         public string Multiplication(string x, string y)
         {
+            if (x == "0" || y == "0") return "0";
+            bool sign = x[0] != '-';
+            x = x.Replace("-", "");
             (string x1, string y1) = significantZeros(x, y);
-            bool sign = x1[0] != '-';
-            x1 = x1.Replace("-", "");
             int tempDot = y1.Length - y1.IndexOf(",") - 1 + (x1.Length - x1.IndexOf(",") - 1);
             x1 = x1.Replace(",", "");
             y1 = y1.Replace(",", "");

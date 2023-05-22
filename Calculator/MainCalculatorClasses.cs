@@ -31,7 +31,7 @@ namespace Calculator
         {
             this.problem = problem;
             this.answer = answer;
-            system = system;
+            system = numSystem.dec;
             if (!list.Items.Contains(this))
             {
                 list.Items.Insert(0, this);

@@ -154,6 +154,14 @@ namespace Calculator
                 {
                     textBox1.Text = textBox1.Text.Substring(2);
                 }
+                if (textBox1.Text.EndsWith(","))
+                {
+                    if (textBox1.Text == ",") 
+                        textBox1.Text = "0,";
+                    else
+                        if (Constants.allOperations.Contains(textBox1.Text[textBox1.Text.Length - 2]))
+                            textBox1.Text = textBox1.Text.Insert(textBox1.Text.Length - 1, "0");
+                }
             }
             textBox1.DeselectAll();
             buttonEqual.Focus();
@@ -265,12 +273,16 @@ namespace Calculator
 
         private void button19_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text[0] != '-')
-                textBox1.Text = "1÷" + textBox1.Text;
-            else
-                textBox1.Text = "-1÷" + textBox1.Text;
-            buttonEqual_Click(sender, e);
-            buttonEqual.Focus();
+            if (textBox1.Text != string.Empty)
+            {
+                if (textBox1.Text[0] != '-')
+                    textBox1.Text = "1÷" + textBox1.Text;
+                else
+                    textBox1.Text = "-1÷" + textBox1.Text;
+                buttonEqual_Click(sender, e);
+                buttonEqual.Focus();
+            }
+            else textBox1.Text = "1÷";
         }
 
         private void button18_Click(object sender, EventArgs e)

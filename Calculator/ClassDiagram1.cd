@@ -51,18 +51,23 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Calculator.DecSimpleCalc" Collapsed="true">
-    <Position X="0.5" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>QAABAAAAAQAAAAEAAAAAAAAAAACAAAAAAABgAAAAYAQ=</HashCode>
-      <FileName>SimpleCalculatorClasses.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Calculator.BinSimpleCalc" Collapsed="true">
     <Position X="2.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAQ=</HashCode>
       <FileName>SimpleCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.Properties.Resources" Collapsed="true">
+    <Position X="13.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAABEAAAAQEAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.Properties.Settings" Collapsed="true">
+    <Position X="9.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Calculator.OctSimpleCalc" Collapsed="true">
@@ -79,16 +84,11 @@
       <FileName>SimpleCalculatorClasses.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Calculator.Properties.Resources" Collapsed="true">
-    <Position X="13.25" Y="1.5" Width="1.5" />
+  <Class Name="Calculator.DecSimpleCalc" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAACAABEAAAAQEAAAAAAAAAAAAAAIA=</HashCode>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Calculator.Properties.Settings" Collapsed="true">
-    <Position X="9.75" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>QAABAAAAAQAAAAEAAAAAAAAAAACAAAAAAABgAAAAYAQ=</HashCode>
+      <FileName>SimpleCalculatorClasses.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="Calculator.IHistory" Collapsed="true">

@@ -281,7 +281,7 @@ namespace Calculator
             {
                 number = '0' + number;
             }
-
+            if (number == string.Empty) number = "0";
             return number;
         }
     }
@@ -406,6 +406,10 @@ namespace Calculator
         }
         private string Sum(string x, string y)
         {
+            if (x[0] == '-')
+            {
+                return Subtraction(y, x.Substring(1, x.Length - 1));
+            }
             (string x1, string y1) = significantZeros(x, y);
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
@@ -523,7 +527,7 @@ namespace Calculator
             int n = ((x1.Length - xDecimalPos) * 2) - 2;
             x1 = x1.Replace(",", "");
             y1 = y1.Replace(",", "");
-            string result = string.Empty;
+            string result = "0";
 
             for (int i = y1.Length - 1; i >= 0; i--)
             {

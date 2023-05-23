@@ -214,13 +214,12 @@ namespace Calculator
         {
             int n;
             string s;
-            if (textBox1.Text == string.Empty || textBox1.Text == "-") { MessageBox.Show("Введите пример"); return; }
+            if (textBox1.Text == string.Empty || textBox1.Text == "-") return;
             try
             {
                 n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => charLists.allOperations.Contains(a)));
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 string s1 = textBox1.Text.Substring(0, n);
-                if (s1 == string.Empty) throw new InvalidOperationException();
                 textBox1.Text = textBox1.Text.Substring(0, n + 1);
                 char op = textBox1.Text[n];
                 if (op == '×' || op == '÷')
@@ -246,8 +245,7 @@ namespace Calculator
         {
             int n;
             string s;
-            if (textBox1.Text == string.Empty || textBox1.Text == "-")
-            { MessageBox.Show("Введите пример"); return; }
+            if (textBox1.Text == string.Empty || textBox1.Text == "-") return; 
             try
             {
                 n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => charLists.allOperations.Contains(a)));
@@ -269,7 +267,6 @@ namespace Calculator
                 textBox1.Text = Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################");
                 new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
             }
-            catch (FormatException) { MessageBox.Show("Неправильный ввод"); }
             buttonEqual.Focus();
         }
 

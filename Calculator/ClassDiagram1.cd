@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Calculator.Калькулятор" Collapsed="true">
+    <Position X="11.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASFAQgHAOSiAwFiDJBCAAIUXAMw7gEBiEIQAQCJVgCI=</HashCode>
+      <FileName>Form1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.charLists" Collapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAABEAAAAAIAAAAAAAAAAAAAAAAARAAAAA=</HashCode>
+      <FileName>MainCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.History" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAACEgAAAAAAAAAAAAIAAAAAAAAAAAAI=</HashCode>
+      <FileName>MainCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Calculator.MyFont" Collapsed="true">
+    <Position X="9.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACBAAAAAAAAAAAAAAAAAAAAAAAGAAg=</HashCode>
+      <FileName>MyFont.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.Program" Collapsed="true">
+    <Position X="11.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.MyConverter" Collapsed="true">
+    <Position X="13.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAQAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>SimpleCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.SimpCalc" Collapsed="true">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QgABAAAAAQAAAAGAAAAAAAAAAAAAAAAAAABgAAABgAw=</HashCode>
+      <FileName>SimpleCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Calculator.DecSimpleCalc" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAABAAAAAQAAAAEAAAAAAAAAAACAAAAAAABgAAAAYAQ=</HashCode>
+      <FileName>SimpleCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.BinSimpleCalc" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAQ=</HashCode>
+      <FileName>SimpleCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.OctSimpleCalc" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAQ=</HashCode>
+      <FileName>SimpleCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.HexSimpleCalc" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAABAAAAAQAAAAAAAAAAAAAgAAAAAAAAAABgAAAAAAw=</HashCode>
+      <FileName>SimpleCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.Properties.Resources" Collapsed="true">
+    <Position X="13.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAABEAAAAQEAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calculator.Properties.Settings" Collapsed="true">
+    <Position X="9.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Calculator.IHistory" Collapsed="true">
+    <Position X="9.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAACEgAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>MainCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Calculator.ISimpleCalc" Collapsed="true">
+    <Position X="11.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QgABAAAAAQAAAACAAAAAAAAAAAAAAAAAAAAAAAABAAQ=</HashCode>
+      <FileName>SimpleCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Calculator.numSystem" Collapsed="true">
+    <Position X="9.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAIAAAAAAAIgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SimpleCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="Calculator.Operation" Collapsed="true">
+    <Position X="9.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SimpleCalculatorClasses.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

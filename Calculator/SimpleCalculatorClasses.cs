@@ -151,7 +151,7 @@ namespace Calculator
         {
             try
             {
-                int n = s.LastIndexOf(s.Last(a => Constants.allOperations.Contains(a)));
+                int n = s.LastIndexOf(s.Last(a => charLists.allOperations.Contains(a)));
                 string x = s.Substring(0, n);
                 string y = s.Substring(n + 1);
                 return (x, y, s[n]);
@@ -209,29 +209,29 @@ namespace Calculator
         /// <summary>
         /// Добавляет незначащие нули и запятую до одинакового количества знаков
         /// </summary>
-        /// <param name="binaryNumber1"></param>
-        /// <param name="binaryNumber2"></param>
+        /// <param name="number1"></param>
+        /// <param name="number2"></param>
         /// <returns>Два вещественных числа одинаковой длины</returns>
-        public (string x, string y) significantZeros(string binaryNumber1, string binaryNumber2)
+        public (string x, string y) significantZeros(string number1, string number2)
         {
             // Проверка, содержатся ли десятичные разделители в числах
-            bool hasDecimalPoint1 = binaryNumber1.Contains(",");
-            bool hasDecimalPoint2 = binaryNumber2.Contains(",");
+            bool hasDecimalPoint1 = number1.Contains(",");
+            bool hasDecimalPoint2 = number2.Contains(",");
 
             // Если число не содержит десятичного разделителя, добавляем его и ноль после
             if (!hasDecimalPoint1)
             {
-                binaryNumber1 += ",0";
+                number1 += ",0";
             }
 
             if (!hasDecimalPoint2)
             {
-                binaryNumber2 += ",0";
+                number2 += ",0";
             }
 
             // Разделение чисел на целую и дробную части
-            string[] parts1 = binaryNumber1.Split(',');
-            string[] parts2 = binaryNumber2.Split(',');
+            string[] parts1 = number1.Split(',');
+            string[] parts2 = number2.Split(',');
 
             // Получение целой и дробной частей для каждого числа
             string integerPart1 = parts1[0];
@@ -367,7 +367,7 @@ namespace Calculator
         public override string y { get; set; }
         public BinSimpleCalc(string s)
         {
-            if (s.ToCharArray().Except(Constants.binChar).Any())
+            if (s.ToCharArray().Except(charLists.binChar).Any())
             {
                 throw new ArgumentException("Недопустимые символы");
             }
@@ -653,7 +653,7 @@ namespace Calculator
         public override string y { get; set; }
         public OctSimpleCalc(string s)
         {
-            if (s.ToCharArray().Except(Constants.octChar).Any())
+            if (s.ToCharArray().Except(charLists.octChar).Any())
             {
                 throw new ArgumentException("Недопустимые символы");
             }
@@ -945,7 +945,7 @@ namespace Calculator
         public override string y { get; set; }
         public HexSimpleCalc(string s)
         {
-            if (s.ToCharArray().Except(Constants.hexChar).Any())
+            if (s.ToCharArray().Except(charLists.hexChar).Any())
             {
                 throw new ArgumentException("Недопустимые символы");
             }
@@ -1056,7 +1056,7 @@ namespace Calculator
 
             int n = x1.Length - x1.IndexOf(',') - 1;
             x1 = x1.Replace(",", ""); y1 = y1.Replace(",", "");
-            bool sign = Convert.ToInt64(x1) >= Convert.ToInt64(y1);
+            bool sign = Convert.ToInt64(x1, 16) >= Convert.ToInt64(y1, 16);
             if (!sign)
             {
                 (x1, y1) = (y1, x1);
@@ -1066,9 +1066,10 @@ namespace Calculator
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                long digitX = Convert.ToInt64(x1[i].ToString());
-                long digitY = Convert.ToInt64(y1[i].ToString());
-
+                //long digitX = Convert.ToInt64(x1[i].ToString());
+                //long digitY = Convert.ToInt64(y1[i].ToString());
+                long digitX = hexToLong(x1[i]);
+                long digitY = hexToLong(y1[i]);
                 long subtractedDigit = digitX - digitY - temp;
                 if (subtractedDigit < 0)
                 {

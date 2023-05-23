@@ -26,7 +26,7 @@ namespace Calculator
             textBox1.Font = new Font(MyFont.LoadFont(Resources.Digital7Italic_BW658), textBox1.Font.Size);
             textBox1.ForeColor = ColorTranslator.FromHtml("#F7FFF7");
             list = listBox1;
-            keysChar = Constants.decChar;
+            keysChar = charLists.decChar;
             buttons = new List<Button>() { button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, buttonA, buttonB, buttonC, buttonD, buttonE, buttonF, button21, button22, button19, button17, button18 };
             textBox1.DeselectAll();
             buttonEqual.Focus();
@@ -87,7 +87,7 @@ namespace Calculator
             History item = (History)listBox1.SelectedItem;
             if (listBox1.SelectedIndex != -1)
             {
-                if (textBox1.Text != string.Empty && Constants.decimalOperations.Contains(textBox1.Text[textBox1.Text.Length - 1]))
+                if (textBox1.Text != string.Empty && charLists.decimalOperations.Contains(textBox1.Text[textBox1.Text.Length - 1]))
                 {
                     textBox1.Text += MyConverter.fromDec(MyConverter.toDec(item.answer, item.system), system);
                 }
@@ -103,7 +103,7 @@ namespace Calculator
 
         public int numOfOp(string s)
         {
-            int n = s.Count(a => Constants.allOperations.Contains(a));
+            int n = s.Count(a => charLists.allOperations.Contains(a));
             return s[0] == '-' ? n - 1 : n;
         }
 
@@ -159,7 +159,7 @@ namespace Calculator
                     if (textBox1.Text == ",") 
                         textBox1.Text = "0,";
                     else
-                        if (Constants.allOperations.Contains(textBox1.Text[textBox1.Text.Length - 2]))
+                        if (charLists.allOperations.Contains(textBox1.Text[textBox1.Text.Length - 2]))
                             textBox1.Text = textBox1.Text.Insert(textBox1.Text.Length - 1, "0");
                 }
             }
@@ -217,7 +217,7 @@ namespace Calculator
             if (textBox1.Text == string.Empty || textBox1.Text == "-") { MessageBox.Show("Введите пример"); return; }
             try
             {
-                n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => Constants.allOperations.Contains(a)));
+                n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => charLists.allOperations.Contains(a)));
                 s = textBox1.Text.Substring(n + 1, textBox1.TextLength - n - 1);
                 string s1 = textBox1.Text.Substring(0, n);
                 if (s1 == string.Empty) throw new InvalidOperationException();
@@ -238,6 +238,7 @@ namespace Calculator
                 s = textBox1.Text.Substring(0, textBox1.TextLength);
                 textBox1.Text = (Convert.ToDecimal(s) / 100).ToString("0.############################");
             }
+            catch (FormatException) { MessageBox.Show("Неправильный ввод"); }
             buttonEqual.Focus();
         }
 
@@ -249,7 +250,7 @@ namespace Calculator
             { MessageBox.Show("Введите пример"); return; }
             try
             {
-                n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => Constants.allOperations.Contains(a)));
+                n = textBox1.Text.LastIndexOf(textBox1.Text.Last(a => charLists.allOperations.Contains(a)));
                 if (n == 0)
                 {
                     MessageBox.Show("Корень от отрицательного числа"); return;
@@ -268,6 +269,7 @@ namespace Calculator
                 textBox1.Text = Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################");
                 new History("√" + s, Math.Sqrt(Convert.ToDouble(s)).ToString("0.############################"), list);
             }
+            catch (FormatException) { MessageBox.Show("Неправильный ввод"); }
             buttonEqual.Focus();
         }
 
@@ -275,10 +277,24 @@ namespace Calculator
         {
             if (textBox1.Text != string.Empty)
             {
+                int n = -1;
+                for (int i = 0; i < textBox1.Text.Length; i++)
+                {
+                    if (charLists.decimalOperations.Contains(textBox1.Text[i])) n = i;
+                }
+                if (n != -1)
+                {
+                    string temp = textBox1.Text.Substring(0, n+1);
+                    textBox1.Text = "1÷" + textBox1.Text.Substring(n+1);
+                    buttonEqual_Click(sender, e);
+                    textBox1.Text = temp + textBox1.Text;
+                    return;
+                }
+
                 if (textBox1.Text[0] != '-')
                     textBox1.Text = "1÷" + textBox1.Text;
                 else
-                    textBox1.Text = "-1÷" + textBox1.Text;
+                    textBox1.Text = "-1÷" + textBox1.Text.Substring(1);
                 buttonEqual_Click(sender, e);
                 buttonEqual.Focus();
             }
@@ -306,15 +322,23 @@ namespace Calculator
         {
             if (radioButton1.Checked)
             {
-                keysChar = Constants.binChar;
+                keysChar = charLists.binChar;
                 buttons.ForEach(button => button.Enabled = false);
                 button10.Enabled = true;
                 button1.Enabled = true;
                 if (textBox1.Text != string.Empty)
                 {
-                    textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
-                        ? MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.bin) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.bin)
-                        : MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.bin);
+                    try
+                    {
+                        textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
+                            ? MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.bin) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.bin)
+                            : MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.bin);
+                    }
+                    catch (OverflowException) 
+                    { 
+                        MessageBox.Show("Число было слишком маленьким или слишком большим");
+                        textBox1.Text = string.Empty;
+                    }
                 }
                 system = numSystem.bin;
             }
@@ -324,7 +348,7 @@ namespace Calculator
         {
             if (radioButton2.Checked)
             {
-                keysChar = Constants.octChar;
+                keysChar = charLists.octChar;
                 buttons.ForEach(button => button.Enabled = false);
                 button10.Enabled = true;
                 button1.Enabled = true;
@@ -336,9 +360,17 @@ namespace Calculator
                 button7.Enabled = true;
                 if (textBox1.Text != string.Empty)
                 {
-                    textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
-                        ? MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.oct) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.oct)
-                        : MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.oct);
+                    try
+                    {
+                        textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
+                            ? MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.oct) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.oct)
+                            : MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.oct);
+                    }
+                    catch (OverflowException)
+                    {
+                        MessageBox.Show("Число было слишком маленьким или слишком большим");
+                        textBox1.Text = string.Empty;
+                    }
                 }
                 system = numSystem.oct;
             }
@@ -348,7 +380,7 @@ namespace Calculator
         {
             if (radioButton3.Checked)
             {
-                keysChar = Constants.decChar;
+                keysChar = charLists.decChar;
                 buttons.ForEach(button => button.Enabled = false);
                 button10.Enabled = true;
                 button1.Enabled = true;
@@ -367,9 +399,16 @@ namespace Calculator
                 button18.Enabled = true;
                 if (textBox1.Text != string.Empty)
                 {
-                    textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
-                        ? MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system).ToString() + MyConverter.fromString(textBox1.Text).operation + MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system)
-                        : MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system).ToString();
+                    try {
+                        textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
+                            ? MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system).ToString() + MyConverter.fromString(textBox1.Text).operation + MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system)
+                            : MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system).ToString();
+                    }
+                    catch (OverflowException)
+                    {
+                        MessageBox.Show("Число было слишком маленьким или слишком большим");
+                        textBox1.Text = string.Empty;
+                    }
                 }
                 system = numSystem.dec;
             }
@@ -379,7 +418,7 @@ namespace Calculator
         {
             if (radioButton4.Checked)
             {
-                keysChar = Constants.hexChar;
+                keysChar = charLists.hexChar;
                 buttons.ForEach(button => button.Enabled = true);
                 button21.Enabled = false;
                 button22.Enabled = false;
@@ -388,9 +427,17 @@ namespace Calculator
                 button18.Enabled = false;
                 if (textBox1.Text != string.Empty)
                 {
-                    textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
-                        ? MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.hex) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.hex)
-                        : MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.hex);
+                    try 
+                    {
+                        textBox1.Text = MyConverter.fromString(textBox1.Text).operation != '!'
+                            ? MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.hex) + MyConverter.fromString(textBox1.Text).operation + MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).y.ToString(), system), numSystem.hex)
+                            : MyConverter.fromDec(MyConverter.toDec(MyConverter.fromString(textBox1.Text).x.ToString(), system), numSystem.hex);
+                    }
+                    catch (OverflowException)
+                    {
+                        MessageBox.Show("Число было слишком маленьким или слишком большим");
+                        textBox1.Text = string.Empty;
+                    }
                 }
                 system = numSystem.hex;
             }

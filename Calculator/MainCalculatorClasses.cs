@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace Calculator
 {
-    public static class Constants
+    public static class charLists
     {
         public static List<char> decChar { get; } = new List<char>() { '+', '-', '*', '/', '%', '^', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', (char)Keys.Back, '.', ',', '×', '÷', };
         public static List<char> binChar { get; } = new List<char>() { '+', '-', '*', '/', '0', '1', (char)Keys.Back, '.', ',', '×', '÷' };

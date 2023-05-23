@@ -1066,8 +1066,6 @@ namespace Calculator
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                //long digitX = Convert.ToInt64(x1[i].ToString());
-                //long digitY = Convert.ToInt64(y1[i].ToString());
                 long digitX = hexToLong(x1[i]);
                 long digitY = hexToLong(y1[i]);
                 long subtractedDigit = digitX - digitY - temp;

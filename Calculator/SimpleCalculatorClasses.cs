@@ -397,8 +397,8 @@ namespace Calculator
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 2) + result;
-                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 2;
+                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % (int)system) + result;
+                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / (int)system;
             }
             result = temp + result;
             result = result.Insert(result.Length - n, ",");
@@ -417,8 +417,8 @@ namespace Calculator
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 2) + result;
-                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 2;
+                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % (int)system) + result;
+                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / (int)system;
             }
             result = temp + result;
             result = result.Insert(result.Length - n, ",");
@@ -455,7 +455,7 @@ namespace Calculator
                 long subtractedDigit = digitX - digitY - temp;
                 if (subtractedDigit < 0)
                 {
-                    subtractedDigit += 2;
+                    subtractedDigit += (int)system;
                     temp = 1;
                 }
                 else
@@ -493,7 +493,7 @@ namespace Calculator
                 long subtractedDigit = digitX - digitY - temp;
                 if (subtractedDigit < 0)
                 {
-                    subtractedDigit += 2;
+                    subtractedDigit += (int)system;
                     temp = 1;
                 }
                 else
@@ -687,8 +687,8 @@ namespace Calculator
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 8) + result;
-                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 8;
+                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % ((int)system)) + result;
+                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / ((int)system);
             }
             result = temp + result;
             result = result.Insert(result.Length - n, ",");
@@ -703,8 +703,8 @@ namespace Calculator
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % 8) + result;
-                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / 8;
+                result = ((Convert.ToInt64(x1[i]) + Convert.ToInt64(y1[i]) + temp) % ((int)system)) + result;
+                temp = (Convert.ToInt64(x1[i].ToString()) + Convert.ToInt64(y1[i].ToString()) + temp) / ((int)system);
             }
             result = temp + result;
             result = result.Insert(result.Length - n, ",");
@@ -742,7 +742,7 @@ namespace Calculator
                 long subtractedDigit = digitX - digitY - temp;
                 if (subtractedDigit < 0)
                 {
-                    subtractedDigit += 8;
+                    subtractedDigit += (int)system;
                     temp = 1;
                 }
                 else
@@ -781,7 +781,7 @@ namespace Calculator
                 long subtractedDigit = digitX - digitY - temp;
                 if (subtractedDigit < 0)
                 {
-                    subtractedDigit += 8;
+                    subtractedDigit += (int)system;
                     temp = 1;
                 }
                 else
@@ -900,7 +900,7 @@ namespace Calculator
                 else
                 {
                     int tempq = 1;
-                    for (int j = 7; j >= 1; j--)
+                    for (int j = ((int)system)-1; j >= 1; j--)
                     {
                         if (Convert.ToInt64(Multiplication(tempY.ToString(), j.ToString())) <= tempX)
                         {
@@ -1020,8 +1020,8 @@ namespace Calculator
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                result = longToHex((hexToLong(x1[i]) + hexToLong(y1[i]) + temp) % 16) + result;
-                temp = (hexToLong(x1[i]) + hexToLong(y1[i]) + temp) / 16;
+                result = longToHex((hexToLong(x1[i]) + hexToLong(y1[i]) + temp) % ((int)system)) + result;
+                temp = (hexToLong(x1[i]) + hexToLong(y1[i]) + temp) / ((int)system);
             }
             result = longToHex(temp) + result;
             result = result.Insert(result.Length - n, ",");
@@ -1037,8 +1037,8 @@ namespace Calculator
             long temp = 0;
             for (int i = x1.Length - 1; i >= 0; i--)
             {
-                result = longToHex((hexToLong(x1[i]) + hexToLong(y1[i]) + temp) % 16) + result;
-                temp = (hexToLong(x1[i]) + hexToLong(y1[i]) + temp) / 16;
+                result = longToHex((hexToLong(x1[i]) + hexToLong(y1[i]) + temp) % ((int)system)) + result;
+                temp = (hexToLong(x1[i]) + hexToLong(y1[i]) + temp) / ((int)system);
             }
             result = longToHex(temp) + result;
             result = result.Insert(result.Length - n, ",");
@@ -1075,7 +1075,7 @@ namespace Calculator
                 long subtractedDigit = digitX - digitY - temp;
                 if (subtractedDigit < 0)
                 {
-                    subtractedDigit += 16;
+                    subtractedDigit += ((int)system);
                     temp = 1;
                 }
                 else
@@ -1114,7 +1114,7 @@ namespace Calculator
                 long subtractedDigit = digitX - digitY - temp;
                 if (subtractedDigit < 0)
                 {
-                    subtractedDigit += 16;
+                    subtractedDigit += ((int)system);
                     temp = 1;
                 }
                 else
@@ -1233,9 +1233,9 @@ namespace Calculator
                 else
                 {
                     int tempq = 1;
-                    for (int j = 15; j >= 1; j--)
+                    for (int j = ((int)system)-1; j >= 1; j--)
                     {
-                        if (Convert.ToInt64(Multiplication(tempY.ToString(), longToHex(j)), 16) <= Convert.ToInt64(tempX, 16))
+                        if (Convert.ToInt64(Multiplication(tempY.ToString(), longToHex(j)), ((int)system)) <= Convert.ToInt64(tempX, ((int)system)))
                         {
                             result += longToHex(j);
                             tempq = j;

@@ -8,14 +8,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Calculator.charLists">
-    <Position X="14.75" Y="3.5" Width="1.5" />
+    <Position X="9.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AgAAAAAAAAAABEAAAAAIAAAAAAAAAAAAAAAAARAAAAA=</HashCode>
       <FileName>MainCalculatorClasses.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Calculator.History" BaseTypeListCollapsed="true">
-    <Position X="7.5" Y="1.25" Width="1.5" />
+    <Position X="7.25" Y="0.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AgAAAAAAAAAAAACEgAAAAAAAAAAAAIAAAAAAAAAAAAI=</HashCode>
       <FileName>MainCalculatorClasses.cs</FileName>
@@ -23,7 +23,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Calculator.MyFont">
-    <Position X="13" Y="4.75" Width="1.5" />
+    <Position X="16.25" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAACBAAAAAAAAAAAAAAAAAAAAAAAGAAg=</HashCode>
       <FileName>MyFont.cs</FileName>
@@ -37,14 +37,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Calculator.MyConverter">
-    <Position X="13" Y="3" Width="1.5" />
+    <Position X="9.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AgAAAAAAAAAQAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
       <FileName>SimpleCalculatorClasses.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Calculator.SimpCalc">
-    <Position X="3.75" Y="0.5" Width="2.25" />
+    <Position X="3" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>QgABAAAAAQAAAAGAAAAAAAAAAAAAAAAAAABgAAABgAw=</HashCode>
       <FileName>SimpleCalculatorClasses.cs</FileName>
@@ -92,28 +92,28 @@
     </TypeIdentifier>
   </Class>
   <Interface Name="Calculator.IHistory">
-    <Position X="13" Y="0.5" Width="1.5" />
+    <Position X="5.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AgAAAAAAAAAAAACEgAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>MainCalculatorClasses.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Calculator.ISimpleCalc">
-    <Position X="14.75" Y="0.5" Width="1.5" />
+    <Position X="1.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QgABAAAAAQAAAACAAAAAAAAAAAAAAAAAAAAAAAABAAQ=</HashCode>
       <FileName>SimpleCalculatorClasses.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="Calculator.numSystem" Collapsed="true">
-    <Position X="16.25" Y="5.5" Width="1.5" />
+    <Position X="20" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAQAAAAAIAAAAAAAIgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>SimpleCalculatorClasses.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Delegate Name="Calculator.Operation" Collapsed="true">
-    <Position X="16.25" Y="6.5" Width="1.5" />
+  <Delegate Name="Calculator.Operation">
+    <Position X="20" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>SimpleCalculatorClasses.cs</FileName>
